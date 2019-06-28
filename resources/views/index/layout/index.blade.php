@@ -219,6 +219,7 @@
 
 <!-- Container Selection1 -->
 <div id="dropDownSelect1"></div>
+<div id="dropDownSelect2"></div>
 
 
 
@@ -252,18 +253,51 @@
 <!--===============================================================================================-->
 <script type="text/javascript" src="{{asset('index_assets/vendor/sweetalert/sweetalert.min.js')}}"></script>
 <script type="text/javascript">
-    $('.block2-btn-addcart').each(function(){
-        var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
-        $(this).on('click', function(){
-            swal(nameProduct, "is added to cart !", "success");
-        });
-    });
+    // $('.block2-btn-addcart').each(function(){
+    //     var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
+    //     $(this).on('click', function(){
+    //         swal(nameProduct, "is added to cart !", "success");
+    //     });
+    // });
 
     $('.block2-btn-addwishlist').each(function(){
         var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
         $(this).on('click', function(){
             swal(nameProduct, "is added to wishlist !", "success");
         });
+    });
+</script>
+<script type="text/javascript">
+    // $(document).on('click','.as',function (e) {
+    //     alert("dd");
+    // });
+    $(document).on('click','.btn-addcart',function (event){
+        event.preventDefault();
+        var nameProduct = $(this).parent().parent().parent().parent().find('.block2-name').html();
+        if(nameProduct == null){
+            nameProduct = $(this).parent().parent().parent().parent().find('.product-detail-name').html();
+        }
+        $.ajax({
+            url: '{{route("index.addToCart.get",[''])}}'+"/"+$(this).attr('data-for'),
+            dataType: "json",
+            type: "GET",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),id: $(this).attr('data-for')}
+            ,success: function(response) {
+                swal(nameProduct, "is added to cart !", "success");
+                $(".header-cart-wrapitem").html(response[0]);
+                $(".header-cart-total").text("$"+response[1]);
+                $(".header-icons-noti").text(response[2]);
+
+
+                //alert(response);
+            },
+            error: function(xhr, textStatus, error){
+
+                alert(error + "\r\n" + xhr.responseText);
+            },
+        });
+        return false; //for good measure
     });
 </script>
 <script type="text/javascript" src="{{asset('index_assets/vendor/noui/nouislider.min.js')}}"></script>

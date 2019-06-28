@@ -36,7 +36,7 @@
                             <thead>
                             <tr>
                                 <th style="width: 10px"># </th>
-                                <th>Customer</th>
+                                <th>Account</th>
                                 <th>Order date</th>
                                 <th>Total Price</th>
                                 <th>Status</th>
@@ -47,7 +47,11 @@
                             @foreach($invoices as $i => $invoice)
                                 <tr>
                                     <td>{{++$i.'.'}}</td>
-                                    <td>{{$invoice->customer->name}}</td>
+                                    @if(isset($invoice->customer))
+                                        <td>{{$invoice->customer->name}}</td>
+                                    @else
+                                        <td>Guest</td>
+                                    @endif
                                     <td>{{$invoice->order_date}}</td>
                                     <td>{{$invoice->total}}</td>
                                     <td>

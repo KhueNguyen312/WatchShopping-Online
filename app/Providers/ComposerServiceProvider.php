@@ -2,14 +2,13 @@
 
 namespace App\Providers;
 
-use App\Brand;
 use Illuminate\Support\ServiceProvider;
 use View;
 
-class AppServiceProvider extends ServiceProvider
+class ComposerServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
@@ -19,16 +18,16 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
     public function boot()
     {
-        //
         View::composer('index.layout.header', function ($view) {
             $brands = Brand::all();
             $view->with('brands',$brands); // bind data to view
         });
+
     }
 }

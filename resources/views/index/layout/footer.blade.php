@@ -140,23 +140,23 @@
 
     <div class="t-center p-l-15 p-r-15">
         <a href="#">
-            <img class="h-size2" src="index_assets/images/icons/paypal.png" alt="IMG-PAYPAL">
+            <img class="h-size2" src="{{asset('index_assets/images/icons/paypal.png')}}" alt="IMG-PAYPAL">
         </a>
 
         <a href="#">
-            <img class="h-size2" src="index_assets/images/icons/visa.png" alt="IMG-VISA">
+            <img class="h-size2" src="{{asset('index_assets/images/icons/visa.png')}}" alt="IMG-VISA">
         </a>
 
         <a href="#">
-            <img class="h-size2" src="index_assets/images/icons/mastercard.png" alt="IMG-MASTERCARD">
+            <img class="h-size2" src="{{asset('index_assets/images/icons/mastercard.png')}}" alt="IMG-MASTERCARD">
         </a>
 
         <a href="#">
-            <img class="h-size2" src="index_assets/images/icons/express.png" alt="IMG-EXPRESS">
+            <img class="h-size2" src="{{asset('index_assets/images/icons/express.png')}}" alt="IMG-EXPRESS">
         </a>
 
         <a href="#">
-            <img class="h-size2" src="index_assets/images/icons/discover.png" alt="IMG-DISCOVER">
+            <img class="h-size2" src="{{asset('index_assets/images/icons/discover.png')}}" alt="IMG-DISCOVER">
         </a>
 
         <div class="t-center s-text8 p-t-20">

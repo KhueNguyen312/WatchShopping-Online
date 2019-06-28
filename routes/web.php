@@ -26,7 +26,14 @@ Route::group(['prefix' => 'ad', 'middleware' => 'adminLogin'], function () {
 //home
 Route::get('/','IndexHomeController@getHome')->name('index.home.get');
 Route::get('/watches','IndexProductController@getProducts')->name('index.watches.get');
+Route::get('/cart','IndexProductController@cart')->name('index.cart.get');
+Route::patch('update-cart','IndexProductController@update')->name('index.cart.update');
+Route::delete('remove-from-cart', 'IndexProductController@remove')->name('index.cart.remove');
+Route::get('/add-to-cart/{id}','IndexProductController@addToCart')->name('index.addToCart.get');
+Route::get('/product-detail/{id}','IndexProductController@productDetail')->name('index.productDetail.get');
 Route::post('/watches/filter', 'IndexProductController@filterProducts')->name('getfilter');
+Route::get('/checkout','CheckOutController@checkOut')->name('index.checkout.get');
+Route::post('/ordered', 'CheckOutController@ordered')->name('index.checkout.ordered');
 //admin
 Route::group(['prefix' => 'ad'], function () {
     Route::get("attribute", "AdminAttributeController@getListAttributes")->name("ad.attribute.list.get");
