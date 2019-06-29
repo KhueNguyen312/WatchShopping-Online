@@ -37,7 +37,11 @@
                             <tr>
                                 <th style="width: 10px"># </th>
                                 <th>Account</th>
+                                <th>Receiver</th>
                                 <th>Order date</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Phone</th>
                                 <th>Total Price</th>
                                 <th>Status</th>
                                 <th>Option</th>
@@ -52,7 +56,11 @@
                                     @else
                                         <td>Guest</td>
                                     @endif
+                                    <td>{{$invoice->receiver}}</td>
                                     <td>{{$invoice->order_date}}</td>
+                                    <td>{{$invoice->billing_address}}</td>
+                                    <td>{{$invoice->email}}</td>
+                                    <td>{{$invoice->phone}}</td>
                                     <td>{{$invoice->total}}</td>
                                     <td>
                                         <input name="status" type="checkbox" {{$invoice->status==0?"checked disabled":""}} class="flat-red" data-color="#81c868" onchange="checkStatus(this,{{$invoice->id}})"/>

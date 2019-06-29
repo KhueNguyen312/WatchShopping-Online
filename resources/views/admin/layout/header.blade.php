@@ -215,16 +215,16 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{asset('Images/Avatar_admin.jpg')}}" class="user-image" alt="User Image">
+                        <img src="{{Auth::guard('admin')->user()->img}}" class="user-image" alt="User Image">
                         <span class="hidden-xs">Syaoran Clone</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{asset('Images/Avatar_admin.jpg')}}" class="img-circle" alt="User Image">
+                            <img src="{{Auth::guard('admin')->user()->img}}" class="img-circle" alt="User Image">
 
                             <p>
-                                Syaoran Clone - Admin
+                                {{Auth::guard('admin')->user()->name}} - @if(Auth::guard('admin')->user()->role == 0)Admin @else Employee @endif
                                 <small>Member since April. 2019</small>
                             </p>
                         </li>

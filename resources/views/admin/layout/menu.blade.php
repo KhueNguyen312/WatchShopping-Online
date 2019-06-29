@@ -4,7 +4,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{asset('Images/Avatar_admin.jpg')}}" class="img-circle" alt="User Image">
+                    <img src="{{Auth::guard('admin')->user()->img}}" style="width: 40px;height: 40px;" class="img-circle " alt="User Image">
                 </div>
                 <?php
 //                if (Auth::check()==true)
@@ -14,7 +14,7 @@
                     //$id = $user->id
                 ?>
                 <div class="pull-left info">
-                    <p>{{Auth::id()}}</p>
+                    <p>{{Auth::guard('admin')->user()->name}}</p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -77,7 +77,7 @@
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        {{--<li><a href="{{route('ad.user.profile',[$id])}}"><i class="fa fa-circle-o"></i>Profile</a></li>--}}
+                        <li><a href="{{route('ad.user.profile',[Auth::guard('admin')->user()->id])}}"><i class="fa fa-circle-o"></i>Profile</a></li>
                         <li><a href="{{route('ad.user.list.get')}}"><i class="fa fa-circle-o"></i>Admin</a></li>
                         <li><a href="#"><i class="fa fa-circle-o"></i>Customer Management</a></li>
                     </ul>

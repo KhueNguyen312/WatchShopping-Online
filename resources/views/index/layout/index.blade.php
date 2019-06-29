@@ -303,6 +303,8 @@
 <script type="text/javascript" src="{{asset('index_assets/vendor/noui/nouislider.min.js')}}"></script>
 <!--===============================================================================================-->
 <script src="{{asset('index_assets/js/main.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{asset('js/pagination.js')}}"></script>
 @yield('scripts')
 </body>
 </html>

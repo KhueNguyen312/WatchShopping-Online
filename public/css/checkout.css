@@ -114,3 +114,22 @@ span.price {
         margin-bottom: 20px;
     }
 }
+.error{
+    display: none;
+    margin-left: 10px;
+}
+
+.error_show{
+    color: red;
+    margin-left: 10px;
+}
+
+.invalid{
+    border: 1px solid red;
+    border-radius: 2px;
+}
+
+.valid{
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+}

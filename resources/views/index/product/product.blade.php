@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{asset('dist/css/AdminLTE.min.css')}}">
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{asset('plugins/iCheck/all.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/pagination.css')}}">
 @endsection
 @section("content")
     <section class="bg-title-page p-t-50 p-b-40 flex-col-c-m" style="background-image: url('{{asset('/images/product_background.jpg')}}'); background-position: center; ">
@@ -12,6 +13,16 @@
         </h2>
     </section>
 
+    <div class="bread-crumb bgwhite flex-w p-l-52 p-r-15 p-t-30 p-l-15-sm">
+        <a href="{{route('index.home.get')}}" class="s-text16">
+            Home
+            <i class="fa fa-angle-right m-l-8 m-r-9" aria-hidden="true"></i>
+        </a>
+
+        <span class="s-text17">
+			Watches
+		</span>
+    </div>
     <!-- Content page -->
     <section class="bgwhite p-t-55 p-b-65">
         <div class="container">
@@ -23,34 +34,33 @@
                             Categories
                         </h4>
                         <ul class="p-b-54 sidebar-menu" data-widget="tree">
-                            <li class="treeview p-t-4">
-                                <a href="#" class="s-text13 active1">
-                                    <i class="fa fa-list"></i> <span>Brands</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
+                            <div class="wrap-dropdown-content bo7 p-t-15 p-b-14 active-dropdown-content">
+                                <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
+                                    Brands
+                                    <i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
+                                    <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                                </span>
+
+                                <div class="dropdown-content header-cart-wrapitem dis-none p-t-15 p-b-23">
                                     @foreach($brands as $detail)
                                         <li><a>
                                                 <label class="s-text10 active1">
                                                     <input name="cat[]" type="checkbox" class="icheckbox_minimal-blue "
                                                            value = "{{$detail->id}}">
-                                                     {{$detail->name}}</label>
+                                                    {{$detail->name}}</label>
                                             </a>
                                         </li>
                                     @endforeach
-                                </ul>
-                            </li>
+                                </div>
+                            </div>
+                            <div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
+                                <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
+                                    Gender
+                                    <i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
+                                    <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                                </span>
 
-                            <li class="treeview p-t-4">
-                                <a href="#" class="s-text13 active1 ">
-                                    <i class="fa fa-list"></i> <span>Gender</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
+                                <div class="dropdown-content dis-none p-t-15 p-b-23">
                                     @foreach($genders as $detail)
                                         <li><a>
                                                 <label class="s-text10 active1">
@@ -60,17 +70,17 @@
                                             </a>
                                         </li>
                                     @endforeach
-                                </ul>
-                            </li>
+                                </div>
+                            </div>
 
-                            <li class="treeview p-t-4">
-                                <a href="#" class="s-text13 active1 ">
-                                    <i class="fa fa-list"></i> <span>Movement Type</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
+                            <div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
+                                <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
+                                    Movement Type
+                                    <i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
+                                    <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                                </span>
+
+                                <div class="dropdown-content dis-none p-t-15 p-b-23">
                                     @foreach($movements as $detail)
                                         <li><a>
                                                 <label class="s-text10 active1">
@@ -80,27 +90,22 @@
                                             </a>
                                         </li>
                                     @endforeach
-                                </ul>
-                            </li>
-                            <li class="treeview p-t-4">
-                                <a href="#" class="s-text13 active1">
-                                    <i class="fa fa-table"></i> <span>Strap Type</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li><a href="#"><i class="fa fa-circle-o"></i>Sales Report</a></li>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i>Revenue Report</a></li>
-                                </ul>
-                            </li>
+                                </div>
+                            </div>
 
+                            <div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
+                                <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
+                                    Strap Type
+                                    <i class="down-mark fs-12 color1 fa fa-minus dis-none" aria-hidden="true"></i>
+                                    <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
+                                </span>
+
+                                <div class="dropdown-content dis-none p-t-15 p-b-23">
+
+                                </div>
+                            </div>
                         </ul>
 
-                        <!--  -->
-                        <h4 class="m-text14 p-b-32">
-                            Filters
-                        </h4>
 
                         <div class="filter-price p-t-22 p-b-50 bo3">
                             <div class="m-text15 p-b-17">
@@ -125,51 +130,9 @@
                             </div>
                         </div>
 
-                        <div class="filter-color p-t-22 p-b-50 bo3">
-                            <div class="m-text15 p-b-12">
-                                Color
-                            </div>
-
-                            <ul class="flex-w">
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter1" type="checkbox" name="color-filter1">
-                                    <label class="color-filter color-filter1" for="color-filter1"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter2" type="checkbox" name="color-filter2">
-                                    <label class="color-filter color-filter2" for="color-filter2"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter3" type="checkbox" name="color-filter3">
-                                    <label class="color-filter color-filter3" for="color-filter3"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter4" type="checkbox" name="color-filter4">
-                                    <label class="color-filter color-filter4" for="color-filter4"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter5" type="checkbox" name="color-filter5">
-                                    <label class="color-filter color-filter5" for="color-filter5"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter6" type="checkbox" name="color-filter6">
-                                    <label class="color-filter color-filter6" for="color-filter6"></label>
-                                </li>
-
-                                <li class="m-r-10">
-                                    <input class="checkbox-color-filter" id="color-filter7" type="checkbox" name="color-filter7">
-                                    <label class="color-filter color-filter7" for="color-filter7"></label>
-                                </li>
-                            </ul>
-                        </div>
 
                         <div class="search-product pos-relative bo4 of-hidden">
-                            <input class="s-text7 size6 p-l-23 p-r-50" type="text" name="search-product" placeholder="Search Products...">
+                            <input class="live-search s-text7 size6 p-l-23 p-r-50" type="text" name="search-product" placeholder="Search Products...">
 
                             <button class="flex-c-m size5 ab-r-m color2 color0-hov trans-0-4">
                                 <i class="fs-12 fa fa-search" aria-hidden="true"></i>
@@ -217,6 +180,9 @@
                             <div class="block2">
                                 <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
                                     <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
+                                    <!-- use for live search -->
+                                    <span style="display: none">{{$detail->name}} ${{$detail->price}}</span>
+
                                     <div class="block2-overlay trans-0-4">
                                         <a href="#" class="block2-btn-addwishlist hov-pointer trans-0-4">
                                             <i class="icon-wishlist icon_heart_alt" aria-hidden="true"></i>
@@ -231,8 +197,8 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="block2-txt p-t-20">
+
                                     <a href="{{route('index.productDetail.get',[$detail->id])}}" class="block2-name dis-block s-text3 p-b-5">
                                         {{$detail->name}}
                                     </a>
@@ -247,10 +213,11 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="pagination flex-m flex-w p-t-26">
-                        <a href="#" class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>
-                        <a href="#" class="item-pagination flex-c-m trans-0-4">2</a>
-                    </div>
+                    {{--<div id="tab" class="pagination flex-m flex-w p-t-26">--}}
+                        {{--<a href="#" class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>--}}
+                        {{--<a href="#" class="item-pagination flex-c-m trans-0-4">2</a>--}}
+                    {{--</div>--}}
+                    <div id="tab"></div>
                 </div>
             </div>
         </div>
@@ -327,6 +294,7 @@
                 $('input[name="cat[]"]:checked').each(function()
                 {
                     brands.push($(this).val());
+
                 });
                 $('input[name="att[]"]:checked').each(function()
                 {
@@ -352,10 +320,42 @@
                     },
                     success: function (dt) {
                         $('.filter-result').html(dt);
+                        $("#tab").pagination({
+                            items: 2,
+                            contents: 'filter-result',
+                            previous: 'Previous',
+                            next: 'Next',
+                            position: 'bottom',
+                        });
                     }
                 });
             });
         });
     </script>
-    <!-- Add to cart -->
+    <!-- Live search -->
+    <script>
+        $(document).ready(function(){
+            $(".live-search").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".filter-result div").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+                });
+            });
+        });
+    </script>
+    <!-- Pagination -->
+    <script src="js/pagination.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#tab").pagination({
+                items: 2,
+                contents: 'filter-result',
+                previous: 'Previous',
+                next: 'Next',
+                position: 'bottom',
+            });
+        })
+
+    </script>
 @endsection

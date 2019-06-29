@@ -43,7 +43,7 @@
                                 <th>Name</th>
                                 <th>Image</th>
                                 <th>Email</th>
-                                <th>Position</th>
+                                <th>Role</th>
                                 <th>Option</th>
                             </tr>
                             </thead>
@@ -56,7 +56,7 @@
                                         <img width="100px" src="{{$user->img}}" class="img-rounded img-thumbnail img-responsive">
                                     </td>
                                     <td>{{$user->email}}</td>
-                                    <td>@if ($user->status == 0) Admin @else Employee @endif</td>
+                                    <td>@if ($user->role == 0) Admin @else Employee @endif</td>
                                     <td>
                                         <a href="#"
                                            class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>

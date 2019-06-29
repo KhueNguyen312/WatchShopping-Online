@@ -31,7 +31,7 @@ class CheckOutController extends Controller
                     'qty' => $product['quantity'],
                 ]);
             }
-            Session::forget('cart');
+            session()->forget('cart');
         }
         return view('index.checkout.ordered');
     }
