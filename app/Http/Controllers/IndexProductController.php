@@ -13,42 +13,97 @@ use Illuminate\Support\Facades\View;
 
 class IndexProductController extends Controller
 {
-    public function productDetail($id){
+    public function productDetail($id)
+    {
         $product = Product::find($id);
         $attributes = Attribute::orderBy("name", "DESC")->get();
-        $relatedProducts = Product::Where('brand_id',$product->brand->id)->paginate(10);
+        $relatedProducts = Product::Where('brand_id', $product->brand->id)->paginate(10);
         $att_value = array();
         foreach ($attributes as $att) {
             $values = AttributeValue::join('product_attribute', 'attribute_value.id', '=', 'product_attribute.att_value_id')
                 ->where('product_attribute.product_id', $id)->where('attribute_value.att_id', $att->id)->get();
-            if($values != null){
-                foreach ($values as $detail){
-                    if(!isset($att_value[$att->name])){
+            if ($values != null) {
+                foreach ($values as $detail) {
+                    if (!isset($att_value[$att->name])) {
                         $att_value[$att->name] = strval($detail->value);
-                    }else{
-                        $att_value[$att->name] .= ", ".strval($detail->value);
+                    } else {
+                        $att_value[$att->name] .= ", " . strval($detail->value);
                     }
                 }
-            }else{
+            } else {
                 $att_value[$att->name] = "";
             }
         }
-        return view('index.product.productdetail',compact('product','att_value','relatedProducts'));
+        return view('index.product.productdetail', compact('product', 'att_value', 'relatedProducts'));
     }
-    public function cart(){
+
+    public function cart()
+    {
         return view('index.cart.cart');
     }
-    public function getProducts(){
-        $brands = Brand::orderBy("name","DESC")->get();
+
+    public function getProducts()
+    {
+        $brands = Brand::orderBy("name", "DESC")->get();
 
         $gender_id = Attribute::select('id')->where('name', "Gender")->value('id');
-        $genders = AttributeValue::orderBy("value","DESC")->where('att_id',$gender_id )->get();
+        $genders = AttributeValue::orderBy("value", "DESC")->where('att_id', $gender_id)->get();
 
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
-        $movements = AttributeValue::orderBy("value","DESC")->where('att_id',$movement_id )->get();
+        $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
 
-        $products = Product::orderBy("id","DESC")->where('status',0)->get();
-        return view('index.product.product',compact('products','brands','genders','movements'));
+        $products = Product::orderBy("id", "DESC")->where('status', 0)->get();
+        return view('index.product.product', compact('products', 'brands', 'genders', 'movements'));
+    }
+
+    public function getProductByBrand($id)
+    {
+        $products = Product::orderBy("id", "DESC")->where('status', 0)->where('brand_id', $id)->get();
+        $gender_id = Attribute::select('id')->where('name', "Gender")->value('id');
+        $genders = AttributeValue::orderBy("value", "DESC")->where('att_id', $gender_id)->get();
+
+        $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
+        $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
+        $brand = Brand::where('id', $id)->get();
+        return view('index.product.brand', compact('products', 'genders', 'movements', 'brand'));
+    }
+
+    public function getMenWatches()
+    {
+        $brands = Brand::orderBy("name", "DESC")->get();
+
+        $gender_id = Attribute::select('id')->where('name', "Gender")->value('id');
+        $genders = AttributeValue::orderBy("value", "DESC")->where('att_id', $gender_id)->get();
+
+        $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
+        $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
+
+        $products = Product::orderBy("product.id", "DESC")->join('product_attribute', 'product.id', '=', 'product_attribute.product_id')->
+        join('attribute_value', 'attribute_value.id', '=', 'product_attribute.att_value_id')->where('attribute_value.value', 'like', 'men%')
+            ->orWhere('attribute_value.value', 'like', '%nam%')->get();
+        //create a array contains what need to show in html page
+        $data = array("name" => "Men's Watches", "banner" => "https://www.collectoffers.com/EditorImages/banner-man-watch.jpg",
+            "see_also_name" => "Ladies Watches", "link" => "/watchshoppingonline/public/ladies-watches");
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
+    }
+    public function getLadiesWatches()
+    {
+        $brands = Brand::orderBy("name", "DESC")->get();
+
+        $gender_id = Attribute::select('id')->where('name', "Gender")->value('id');
+        $genders = AttributeValue::orderBy("value", "DESC")->where('att_id', $gender_id)->get();
+
+        $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
+        $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
+
+        $products = Product::orderBy("product.id", "DESC")->join('product_attribute', 'product.id', '=', 'product_attribute.product_id')->
+        join('attribute_value', 'attribute_value.id', '=', 'product_attribute.att_value_id')->where('attribute_value.value', 'like', '%ladi%')
+            ->orWhere('attribute_value.value', 'like', '%women%')
+            ->orWhere('attribute_value.value', 'like', '%nu%')->get();
+        //create a array contains what need to show in html page
+        $data = array("name" => "Ladies Watches", "banner" => "http://watchmarkaz.pk/img/brandspic/1186067550000.jpg",
+            "see_also_name" => "Mens Watches", "link" => "/watchshoppingonline/public/men-watches");
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
     }
 
     public function filterProducts(Request $request)
@@ -59,29 +114,48 @@ class IndexProductController extends Controller
             $brands = $request->brands;
             $gender = $request->gender;
             $material = $request->material;
+            $pageType = $request->page_type;
+            if ($pageType == "gender") {
+                if($request->name == "Men's Watches")
+                    $query = "SELECT distinct  product.* from product join product_attribute on product_attribute.product_id = product.id
+                          join attribute_value on product_attribute.att_value_id = attribute_value.id 
+                          where (attribute_value.value like \"men%\" or attribute_value.value like \"%Nam%\") and product.status = 0";
+                else{
+                    $query = "SELECT distinct  product.* from product join product_attribute on product_attribute.product_id = product.id
+                          join attribute_value on product_attribute.att_value_id = attribute_value.id 
+                          where (attribute_value.value like \"%women%\" or attribute_value.value like \"%lad%\" 
+                          or attribute_value.value like \"%nu%\") and product.status = 0";
+                }
+            } else {
+                $query = "SELECT distinct product.* FROM product JOIN product_attribute on product.id = product_attribute.product_id where product.status = 0";
+            }
             $temp = "SELECT distinct product.id FROM product JOIN product_attribute on product.id = product_attribute.product_id where product.status = 0";
-            $query = "SELECT distinct product.* FROM product JOIN product_attribute on product.id = product_attribute.product_id where product.status = 0";
-            if($brands != null){
+
+            if ($brands != null) {
                 $brand_filter = implode("','", $brands);
                 $query .= "
-                AND brand_id IN('".$brand_filter."')";
+                AND brand_id IN('" . $brand_filter . "')";
             }
-            if($gender != null){
+            if ($gender != null) {
                 $gender_filter = implode("','", $gender);
                 $query .= "
-                AND product_attribute.att_value_id IN('".$gender_filter."')";
+                AND product_attribute.att_value_id IN('" . $gender_filter . "')";
             }
-            if($gender != null){
+            if ($gender != null) {
                 $gender_filter = implode("','", $gender);
                 $query .= "
-                AND product_attribute.att_value_id IN('".$gender_filter."')";
+                AND product_attribute.att_value_id IN('" . $gender_filter . "')";
             }
-            if($material != null){
+            if ($material != null) {
                 $material_filter = implode("','", $material);
                 $query .= "
-                AND product.id in (".$temp." AND product_attribute.att_value_id IN('".$material_filter."'))";
+                AND product.id in (" . $temp . " AND product_attribute.att_value_id IN('" . $material_filter . "'))";
             }
-                $query .= " order by id DESC";
+            if ($pageType == "brand") {
+                $brand_id = $request->id;
+                $query .= "AND product.brand_id = " . $brand_id;
+            }
+            $query .= " order by id DESC";
             $products = DB::select($query);
 //            switch (true){
 //                case $brands == null && $gender == null:
@@ -111,9 +185,9 @@ class IndexProductController extends Controller
 
             if (count($products) == 0)
                 $msg = "";
-            else{
-                foreach($products as $detail){
-                    $msg .="<div class=\"col-sm-12 col-md-6 col-lg-4 p-b-50\">
+            else {
+                foreach ($products as $detail) {
+                    $msg .= "<div class=\"col-sm-12 col-md-6 col-lg-4 p-b-50\">
                             <!-- Block2 -->
                             <div class=\"block2\">
                                 <div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelnew\">
@@ -154,13 +228,13 @@ class IndexProductController extends Controller
 
     public function addToCart(Request $request)
     {
-        if($request->id){
+        if ($request->id) {
             $id = $request->id;
             $product = Product::find($id);
             $newTotal = 0;
             $count = 0;
             $msg = "";
-            if(!$product) {
+            if (!$product) {
 
                 abort(404);
 
@@ -170,11 +244,11 @@ class IndexProductController extends Controller
 
 
             // if cart is empty then this the first product
-            if(!$cart) {
+            if (!$cart) {
 
                 $cart = [
                     $id => [
-                        "id" =>$product->id,
+                        "id" => $product->id,
                         "name" => $product->name,
                         "quantity" => 1,
                         "price" => $product->price,
@@ -182,7 +256,7 @@ class IndexProductController extends Controller
                     ]
                 ];
                 session()->put('cart', $cart);
-                foreach($cart as $details){
+                foreach ($cart as $details) {
                     $msg .= "<li class=\"header-cart-item\">
                                         <div class=\"header-cart-item-img\">
                                             <img src=\"{$details['img_link']}\" alt=\"IMG\">
@@ -200,22 +274,22 @@ class IndexProductController extends Controller
                                     </li>";
                 }
                 $count++;
-                $newTotal = $cart[$id]["price"]*$cart[$id]["quantity"];
-                $mess1 = strval($cart[$id]['quantity'])." x ".strval($cart[$id]['price']);
+                $newTotal = $cart[$id]["price"] * $cart[$id]["quantity"];
+                $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
                 $mess2 = strval($newTotal);
                 $mess3 = strval($count);
-                echo json_encode( array($msg, $mess2,$mess3));
+                echo json_encode(array($msg, $mess2, $mess3));
                 return;
                 //return redirect()->back();
             }
 
             // if cart not empty then check if this product exist then increment quantity
-            if(isset($cart[$id])) {
+            if (isset($cart[$id])) {
 
                 $cart[$id]['quantity']++;
 
                 session()->put('cart', $cart);
-                foreach($cart as $details){
+                foreach ($cart as $details) {
                     $msg .= "<li class=\"header-cart-item\">
                                         <div class=\"header-cart-item-img\">
                                             <img src=\"{$details['img_link']}\" alt=\"IMG\">
@@ -232,14 +306,14 @@ class IndexProductController extends Controller
                                         </div>
                                     </li>";
                 }
-                foreach ($cart as $item){
-                    $newTotal += $item["price"]*$item["quantity"];
+                foreach ($cart as $item) {
+                    $newTotal += $item["price"] * $item["quantity"];
                     $count++;
                 }
-                $mess1 = strval($cart[$id]['quantity'])." x ".strval($cart[$id]['price']);
+                $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
                 $mess2 = strval($newTotal);
                 $mess3 = strval($count);
-                echo json_encode( array($msg, $mess2,$mess3));
+                echo json_encode(array($msg, $mess2, $mess3));
                 return;
                 //return redirect()->back();
 
@@ -247,7 +321,7 @@ class IndexProductController extends Controller
 
             // if item not exist in cart then add to cart with quantity = 1
             $cart[$id] = [
-                "id" =>$product->id,
+                "id" => $product->id,
                 "name" => $product->name,
                 "quantity" => 1,
                 "price" => $product->price,
@@ -255,7 +329,7 @@ class IndexProductController extends Controller
             ];
 
             session()->put('cart', $cart);
-            foreach($cart as $details){
+            foreach ($cart as $details) {
                 $msg .= "<li class=\"header-cart-item\">
                                         <div class=\"header-cart-item-img\">
                                             <img src=\"{$details['img_link']}\" alt=\"IMG\">
@@ -272,46 +346,47 @@ class IndexProductController extends Controller
                                         </div>
                                     </li>";
             }
-            foreach ($cart as $item){
-                $newTotal += $item["price"]*$item["quantity"];
+            foreach ($cart as $item) {
+                $newTotal += $item["price"] * $item["quantity"];
                 $count++;
             }
-            $mess1 = strval($cart[$id]['quantity'])." x ".strval($cart[$id]['price']);
+            $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
             $mess2 = strval($newTotal);
             $mess3 = strval($count);
-            echo json_encode( array($msg, $mess2,$mess3));
+            echo json_encode(array($msg, $mess2, $mess3));
             return;
 
             //return redirect()->back();
         }
 
     }
+
     public function update(Request $request)
     {
-        if($request->id and $request->quantity)
-        {
+        if ($request->id and $request->quantity) {
             $cart = session()->get('cart');
 
             $cart[$request->id]["quantity"] = $request->quantity;
 
             session()->put('cart', $cart);
-            $newPrice = $cart[$request->id]["quantity"]*$cart[$request->id]["price"];
+            $newPrice = $cart[$request->id]["quantity"] * $cart[$request->id]["price"];
             $newTotal = 0;
-            foreach ($cart as $id){
-                $newTotal += $id["price"]*$id["quantity"];
+            foreach ($cart as $id) {
+                $newTotal += $id["price"] * $id["quantity"];
             }
             $mess1 = strval($newPrice);
             $mess2 = strval($newTotal);
-            echo json_encode( array($mess1, $mess2));
+            echo json_encode(array($mess1, $mess2));
         }
     }
+
     public function remove(Request $request)
     {
-        if($request->id) {
+        if ($request->id) {
 
             $cart = session()->get('cart');
 
-            if(isset($cart[$request->id])) {
+            if (isset($cart[$request->id])) {
 
                 unset($cart[$request->id]);
 

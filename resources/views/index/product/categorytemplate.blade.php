@@ -1,6 +1,6 @@
 @extends("index.layout.index")
 @section('title')
-    <title>All Watches</title>
+    <title>{{$data['name']}}</title>
 @endsection
 @section('styles')
     <!-- Theme style -->
@@ -12,7 +12,7 @@
 @section("content")
     <section class="bg-title-page p-t-50 p-b-40 flex-col-c-m" style="background-image: url('{{asset('/images/product_background.jpg')}}'); background-position: center; ">
         <h2 class="l-text1 t-center" style="color: #1a2226">
-            Watches
+            {{$data['name']}}
         </h2>
     </section>
 
@@ -21,9 +21,13 @@
             Home
             <i class="fa fa-angle-right m-l-8 m-r-9" aria-hidden="true"></i>
         </a>
+        <a href="{{route('index.watches.get')}}" class="s-text16">
+            Watches
+            <i class="fa fa-angle-right m-l-8 m-r-9" aria-hidden="true"></i>
+        </a>
 
         <span class="s-text17">
-			Watches
+			{{$data['name']}}
 		</span>
     </div>
     <!-- Content page -->
@@ -36,6 +40,7 @@
                         <h4 class="m-text14 p-b-7">
                             Categories
                         </h4>
+
                         <ul class="p-b-54 sidebar-menu" data-widget="tree">
                             <div class="wrap-dropdown-content bo7 p-t-15 p-b-14 active-dropdown-content">
                                 <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
@@ -56,6 +61,7 @@
                                     @endforeach
                                 </div>
                             </div>
+
                             <div class="wrap-dropdown-content bo7 p-t-15 p-b-14">
                                 <span class="s-text13 js-toggle-dropdown-content flex-sb-m cs-pointer color0-hov trans-0-4">
                                     Gender
@@ -145,9 +151,17 @@
                 </div>
 
                 <div class="col-sm-6 col-md-8 col-lg-9 p-b-50">
-                    <h4 class=" m-text14 p-t-7 p-b-7">
-                        All Watches
+                    <!--Introduce brand -->
+                    <div class="bg-title-page p-t-50 p-b-40 flex-col-c-m" style="background-image: url(' {{$data['banner']}}'); background-position: center; ">
+
+                    </div>
+                    <h4 name="{{$data['name']}}" class=" cat-name m-text14 p-t-7 p-b-7">
+                        {{$data['name']}}
                     </h4>
+                    <p class="s-text13 p-t-7 p-b-7">
+                        See also <a href="{{$data['link']}}" class="s-text13" style="color: dodgerblue">{{$data['see_also_name']}}</a>
+                    </p>
+
                     <!--  -->
                     <div class="flex-sb-m flex-w p-b-35">
                         <div class="flex-w">
@@ -160,17 +174,6 @@
                                 </select>
                             </div>
 
-                            <div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10">
-                                <select class="selection-2" name="sorting">
-                                    <option>Price</option>
-                                    <option>$0.00 - $50.00</option>
-                                    <option>$50.00 - $100.00</option>
-                                    <option>$100.00 - $150.00</option>
-                                    <option>$150.00 - $200.00</option>
-                                    <option>$200.00+</option>
-
-                                </select>
-                            </div>
                         </div>
 
                         <span class="s-text8 p-t-5 p-b-5">
@@ -181,48 +184,44 @@
                     <!-- Product -->
                     <div class="row filter-result">
                         @foreach($products as $detail)
-                        <div class="col-sm-12 col-md-6 col-lg-4 p-b-50">
-                            <!-- Block2 -->
-                            <div class="block2">
-                                <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
-                                    <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
-                                    <!-- use for live search -->
-                                    <span style="display: none">{{$detail->name}} ${{$detail->price}}</span>
+                            <div class="col-sm-12 col-md-6 col-lg-4 p-b-50">
+                                <!-- Block2 -->
+                                <div class="block2">
+                                    <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                                        <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
+                                        <!-- use for live search -->
+                                        <span style="display: none">{{$detail->name}} ${{$detail->price}}</span>
 
-                                    <div class="block2-overlay trans-0-4">
-                                        <a href="#" class="block2-btn-addwishlist hov-pointer trans-0-4">
-                                            <i class="icon-wishlist icon_heart_alt" aria-hidden="true"></i>
-                                            <i class="icon-wishlist icon_heart dis-none" aria-hidden="true"></i>
-                                        </a>
+                                        <div class="block2-overlay trans-0-4">
+                                            <a href="#" class="block2-btn-addwishlist hov-pointer trans-0-4">
+                                                <i class="icon-wishlist icon_heart_alt" aria-hidden="true"></i>
+                                                <i class="icon-wishlist icon_heart dis-none" aria-hidden="true"></i>
+                                            </a>
 
-                                        <div class=" block2-btn-addcart w-size1 trans-0-4">
-                                            <!-- Button -->
-                                            <button data-for="{{$detail->id}}" class="btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
-                                                Add to Cart
-                                            </button>
+                                            <div class=" block2-btn-addcart w-size1 trans-0-4">
+                                                <!-- Button -->
+                                                <button data-for="{{$detail->id}}" class="btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
+                                                    Add to Cart
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="block2-txt p-t-20">
+                                    <div class="block2-txt p-t-20">
 
-                                    <a href="{{route('index.productDetail.get',[$detail->id])}}" class="block2-name dis-block s-text3 p-b-5">
-                                        {{$detail->name}}
-                                    </a>
+                                        <a href="{{route('index.productDetail.get',[$detail->id])}}" class="block2-name dis-block s-text3 p-b-5">
+                                            {{$detail->name}}
+                                        </a>
 
-                                    <span class="block2-price m-text6 p-r-5">
+                                        <span class="block2-price m-text6 p-r-5">
 										${{$detail->price}}
 									</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                     </div>
 
                     <!-- Pagination -->
-                    {{--<div id="tab" class="pagination flex-m flex-w p-t-26">--}}
-                        {{--<a href="#" class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>--}}
-                        {{--<a href="#" class="item-pagination flex-c-m trans-0-4">2</a>--}}
-                    {{--</div>--}}
                     <div id="tab"></div>
                 </div>
             </div>
@@ -311,6 +310,7 @@
                     material.push($(this).val());
                 });
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                var name = $('.cat-name').attr('name');
                 $.ajax({
                     url: "{{route('getfilter')}}",
                     type: "POST",
@@ -319,7 +319,8 @@
                         "brands": brands,
                         "gender":gender,
                         "material": material,
-                        "page_type": "all"
+                        "page_type": "gender",
+                        "name": name
                     },
                     error: function(xhr, textStatus, error){
                         alert(error + "\r\n" + xhr.responseText);

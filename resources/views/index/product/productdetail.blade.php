@@ -1,4 +1,7 @@
 @extends("index.layout.index")
+@section('title')
+    <title>{{$product->name}}</title>
+@endsection
 @section('styles')
 @endsection
 @section("content")
@@ -201,7 +204,7 @@
                                     {{$p->name}}
                                 </a>
                                 <span class="block2-price m-text6 p-r-5">
-									{{$p->price}}
+									${{$p->price}}
 								</span>
                             </div>
                         </div>

@@ -49,13 +49,13 @@
                         <li>
                             <a href="#">Brands</a>
                             <ul class="sub_menu">
+                                @foreach($brands as $detail)
+                                    <li><a href="{{route('index.productBrand.get',[$detail->id])}}">{{$detail->name}}</a></li>
+                                @endforeach
+
                                 {{--<li><a href="index.html">Homepage V1</a></li>--}}
                                 {{--<li><a href="home-02.html">Homepage V2</a></li>--}}
-                                <div class="row">
-                                    <div class="col s-text13">Lorem ipsum...</div>
-                                    <div class="col s-text13">col</div>
-                                    <div class="col s-text13">col</div>
-                                </div>
+
                                 {{--@for($i = 1; $i <= 20; $i++)--}}
                                     {{--<li><a href="home-03.html">Homepage V3</a></li>--}}
                                 {{--@endfor--}}
@@ -91,11 +91,11 @@
                         </li>
 
                         <li>
-                            <a href="cart.html">Mens watches</a>
+                            <a href="{{route('index.menWatches.get')}}">Mens watches</a>
                         </li>
 
                         <li>
-                            <a href="cart.html">Ladies watches</a>
+                            <a href="{{route('index.ladiesWatches.get')}}">Ladies watches</a>
                         </li>
 
                         <li class="sale-noti">

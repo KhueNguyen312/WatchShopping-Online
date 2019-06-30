@@ -31,6 +31,9 @@ Route::patch('update-cart','IndexProductController@update')->name('index.cart.up
 Route::delete('remove-from-cart', 'IndexProductController@remove')->name('index.cart.remove');
 Route::get('/add-to-cart/{id}','IndexProductController@addToCart')->name('index.addToCart.get');
 Route::get('/product-detail/{id}','IndexProductController@productDetail')->name('index.productDetail.get');
+Route::get('/brand/{id}','IndexProductController@getProductByBrand')->name('index.productBrand.get');
+Route::get('/men-watches','IndexProductController@getMenWatches')->name('index.menWatches.get');
+Route::get('/ladies-watches','IndexProductController@getLadiesWatches')->name('index.ladiesWatches.get');
 Route::post('/watches/filter', 'IndexProductController@filterProducts')->name('getfilter');
 Route::get('/checkout','CheckOutController@checkOut')->name('index.checkout.get');
 Route::post('/ordered', 'CheckOutController@ordered')->name('index.checkout.ordered');

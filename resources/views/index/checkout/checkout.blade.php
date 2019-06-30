@@ -1,4 +1,7 @@
 @extends("index.layout.index")
+@section('title')
+    <title>Check out</title>
+@endsection
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{asset('css/checkout.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/iCheck/all.css')}}">

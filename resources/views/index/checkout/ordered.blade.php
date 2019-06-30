@@ -1,4 +1,7 @@
 @extends("index.layout.index")
+@section('title')
+    <title>Confirmation</title>
+@endsection
 @section('styles')
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('dist/css/AdminLTE.min.css')}}">

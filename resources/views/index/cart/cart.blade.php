@@ -1,4 +1,7 @@
 @extends("index.layout.index")
+@section('title')
+    <title>Cart</title>
+@endsection
 @section('styles')
 @endsection
 @section("content")

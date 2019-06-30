@@ -3,6 +3,9 @@
     <!-- DataTables -->
 
 @endsection
+@section('title')
+    <title>Home</title>
+@endsection
 @section("content")
     <!-- Slide1 -->
     <section class="slide1">
@@ -21,7 +24,7 @@
 
                         <div class="wrap-btn-slide1 w-size1 animated visible-false" data-appear="zoomIn">
                             <!-- Button -->
-                            <a href="product.html" class="flex-c-m size2 bo-rad-23 s-text2 bgwhite hov1 trans-0-4">
+                            <a href="{{route('index.watches.get')}}" class="flex-c-m size2 bo-rad-23 s-text2 bgwhite hov1 trans-0-4">
                                 Shop Now
                             </a>
                         </div>
@@ -44,7 +47,7 @@
 
                         <div class="block1-wrapbtn w-size2">
                             <!-- Button -->
-                            <a href="#" class="flex-c-m size2 m-text2 bg3 hov1 trans-0-4">
+                            <a href="{{route('index.menWatches.get')}}" class="flex-c-m size2 m-text2 bg3 hov1 trans-0-4">
                                 Men's watches
                             </a>
                         </div>
@@ -70,7 +73,7 @@
 
                         <div class="block1-wrapbtn w-size2">
                             <!-- Button -->
-                            <a href="#" class="flex-c-m size2 m-text2 bg3 hov1 trans-0-4">
+                            <a href="{{route('index.ladiesWatches.get')}}" class="flex-c-m size2 m-text2 bg3 hov1 trans-0-4">
                                 Ladies watches
                             </a>
                         </div>
