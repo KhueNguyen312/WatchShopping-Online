@@ -56,6 +56,11 @@
                         <i class="fa fa-book"></i> <span>Invoices Management</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('ad.coupon.list.get')}}">
+                        <i class="fa fa-ticket"></i> <span>Coupons Management</span>
+                    </a>
+                </li>
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-table"></i> <span>Reports</span>
@@ -64,8 +69,7 @@
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i>Sales Report</a></li>
-                        <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>Revenue Report</a></li>
+                        <li><a href="{{route('ad.report.get')}}"><i class="fa fa-circle-o"></i>Sales Report</a></li>
                     </ul>
                 </li>
 

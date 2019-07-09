@@ -19,6 +19,23 @@
     </section>
     <section class="content">
 
+        @if (count($errors) > 0 || session('error'))
+            <div class="alert alert-danger" role="alert">
+                <strong>Warning!</strong><br>
+                @foreach($errors->all() as $err)
+                    {{$err}}<br/>
+                @endforeach
+                {{session('error')}}
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-success">
+                <strong>Success!</strong>
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <br/>
+                {{session('success')}}
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-3">
 
@@ -47,40 +64,34 @@
                     </ul>
                     <div class="tab-content">
                         <div class="active tab-pane" id="setting">
-                            <form class="form-horizontal">
+                            <form method="Post" action="{{route('ad.admin.edit',[$user->id])}}"  class="form-horizontal">
+                                {{csrf_field()}}
                                 <div class="form-group">
                                     <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputName" placeholder="Name">
+                                        <input type="text" class="form-control" name="name" id="inputName" value="{{$user->name}}" placeholder="Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                        <input type="email" class="form-control" name="email" id="inputEmail" disabled="true" value="{{$user->email}}" placeholder="Email">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
+                                    <label for="inputName" class="col-sm-2 control-label">Image</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputName" placeholder="Name">
+                                        <input type="text" class="form-control" name="img" value="{{$user->img}}" id="inputName" placeholder="Image link">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
+                                    <label for="inputExperience" class="col-sm-2 control-label">Password</label>
 
                                     <div class="col-sm-10">
-                                        <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                                        <input class="form-control" type="password" name="password" id="inputExperience" placeholder="Type your password"></input>
                                     </div>
                                 </div>
                                 <div class="form-group">

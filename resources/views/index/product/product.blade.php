@@ -44,7 +44,7 @@
                                     <i class="up-mark fs-12 color1 fa fa-plus" aria-hidden="true"></i>
                                 </span>
 
-                                <div class="dropdown-content header-cart-wrapitem dis-none p-t-15 p-b-23">
+                                <div class="dropdown-content wrapitem dis-none p-t-15 p-b-23">
                                     @foreach($brands as $detail)
                                         <li><a>
                                                 <label class="s-text10 active1">
@@ -184,7 +184,11 @@
                         <div class="col-sm-12 col-md-6 col-lg-4 p-b-50">
                             <!-- Block2 -->
                             <div class="block2">
-                                <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                                @if($detail->discount > 0)
+                                    <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelsale ">
+                                        @else
+                                            <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                                                @endif
                                     <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
                                     <!-- use for live search -->
                                     <span style="display: none">{{$detail->name}} ${{$detail->price}}</span>
@@ -209,9 +213,20 @@
                                         {{$detail->name}}
                                     </a>
 
-                                    <span class="block2-price m-text6 p-r-5">
+
+                                    @if($detail->discount > 0)
+                                        <span class="block2-oldprice m-text7 p-r-5">
 										${{$detail->price}}
-									</span>
+									    </span>
+
+                                        <span class="block2-newprice m-text8 p-r-5">
+										${{$detail->price * (1-$detail->discount)}}
+									    </span>
+                                    @else
+                                        <span class="block2-price m-text6 p-r-5">
+										${{$detail->price}}
+									    </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -852,7 +852,10 @@ li.sale-noti > a {
   max-height: 270px;
   overflow: auto;
 }
-
+.wrapitem {
+    max-height: 270px;
+    overflow: auto;
+}
 .header-cart-item {
   display: -webkit-box;
   display: -webkit-flex;

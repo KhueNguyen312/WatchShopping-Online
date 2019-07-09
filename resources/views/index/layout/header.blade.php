@@ -15,16 +15,15 @@
 				</span>
 
             <div class="topbar-child2">
-					<span class="topbar-email">
-						Wshopping@gmail.com
-					</span>
-
-                <div class="topbar-language rs1-select2">
-                    <select class="selection-1" name="time">
-                        <option>USD</option>
-                        <option>EUR</option>
-                    </select>
-                </div>
+                @if(Auth::guard('user')->user() != null)
+                    <a href="{{Route('index.logout.get')}}" class="topbar-email">
+                        {{Auth::guard('user')->user()->name}}
+                    </a>
+                @else
+                    <a href="{{Route('index.login.get')}}" class="topbar-email">
+                        Register/Login
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -99,7 +98,7 @@
                         </li>
 
                         <li class="sale-noti">
-                            <a href="product.html">Sale</a>
+                            <a href="{{route('index.sale.get')}}">Sale</a>
                         </li>
 
                         <li>

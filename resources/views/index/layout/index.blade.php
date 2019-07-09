@@ -272,18 +272,22 @@
     // $(document).on('click','.as',function (e) {
     //     alert("dd");
     // });
-    $(document).on('click','.btn-addcart',function (event){
+    $(document).on('click','.btn-addcart, .btn-addcart2 ',function (event){
         event.preventDefault();
         var nameProduct = $(this).parent().parent().parent().parent().find('.block2-name').html();
         if(nameProduct == null){
             nameProduct = $(this).parent().parent().parent().parent().find('.product-detail-name').html();
+        }
+        var qty = 1;
+        if ($(this).hasClass('btn-addcart2')) {
+            qty = Number($('.num-product').val());
         }
         $.ajax({
             url: '{{route("index.addToCart.get",[''])}}'+"/"+$(this).attr('data-for'),
             dataType: "json",
             type: "GET",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),id: $(this).attr('data-for')}
+                _token: $('meta[name="csrf-token"]').attr('content'),id: $(this).attr('data-for'), qty: qty}
             ,success: function(response) {
                 swal(nameProduct, "is added to cart !", "success");
                 $(".header-cart-wrapitem").html(response[0]);

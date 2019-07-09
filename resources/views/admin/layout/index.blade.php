@@ -58,7 +58,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
+    <footer class="main-footer no-print">
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.0
         </div>
@@ -261,7 +261,7 @@
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
+<script type="text/javascript" src="{{asset('index_assets/vendor/sweetalert/sweetalert.min.js')}}"></script>
 <!-- jQuery 3 -->
 <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->

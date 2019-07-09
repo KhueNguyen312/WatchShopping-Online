@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\View;
 
 class IndexProductController extends Controller
 {
+
     public function productDetail($id)
     {
         $product = Product::find($id);
@@ -105,6 +106,21 @@ class IndexProductController extends Controller
             "see_also_name" => "Mens Watches", "link" => "/watchshoppingonline/public/men-watches");
         return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
     }
+    public function getSaleWatches(){
+        $brands = Brand::orderBy("name", "DESC")->get();
+
+        $gender_id = Attribute::select('id')->where('name', "Gender")->value('id');
+        $genders = AttributeValue::orderBy("value", "DESC")->where('att_id', $gender_id)->get();
+
+        $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
+        $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
+
+        $products = Product::orderBy("product.id", "DESC")->where('product.discount', '>', 0)->get();
+        //create a array contains what need to show in html page
+        $data = array("name" => "Sale Watches", "banner" => "https://d3l9endf6kojd4.cloudfront.net/media/wysiwyg/sale-menu-banner1.jpg",
+            "see_also_name" => "All watches", "link" => "/watchshoppingonline/public/watches");
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
+    }
 
     public function filterProducts(Request $request)
     {
@@ -189,9 +205,13 @@ class IndexProductController extends Controller
                 foreach ($products as $detail) {
                     $msg .= "<div class=\"col-sm-12 col-md-6 col-lg-4 p-b-50\">
                             <!-- Block2 -->
-                            <div class=\"block2\">
-                                <div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelnew\">
-                                    <img class=\"responsive-image img-thumbnail \"  src=\"{$detail->img_link}\" alt=\"IMG-PRODUCT\">
+                            <div class=\"block2\">";
+                               if ($detail->discount > 0)
+                                       $msg .="<div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelsale \">";
+                                           else
+                                                $msg .= "<div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelnew\">";
+                                                  
+                                    $msg .= "<img class=\"responsive-image img-thumbnail \"  src=\"{$detail->img_link}\" alt=\"IMG-PRODUCT\">
                                     <div class=\"block2-overlay trans-0-4\">
                                         <a href=\"#\" class=\"block2-btn-addwishlist hov-pointer trans-0-4\">
                                             <i class=\"icon-wishlist icon_heart_alt\" aria-hidden=\"true\"></i>
@@ -210,15 +230,29 @@ class IndexProductController extends Controller
                                 <div class=\"block2-txt p-t-20\">
                                     <a href=\"/watchshoppingonline/public/product-detail/{$detail->id}\" class=\"block2-name dis-block s-text3 p-b-5\">
                                         {$detail->name}
-                                    </a>
+                                    </a>";
                                     
 
-                                    <span class=\"block2-price m-text6 p-r-5\">
-										$ {$detail->price}
-									</span>
+                                     if($detail->discount > 0) {
+                                         $msg .= "  <span class=\"block2-oldprice m-text7 p-r-5\">";
+                                         $msg .= "$";
+
+                                         $msg.= strval( $detail->price);
+                                         $msg .= "</span>
+
+                                            <span class=\"block2-newprice m-text8 p-r-5\">";
+                                         $msg .= "$";
+                                         $msg.= strval($detail->price * (1 - $detail->discount));
+                                         $msg .= "</span>";
+                                     }else{
+                                            $msg.="<span class=\"block2-price m-text6 p-r-5\">";
+										$msg.="$";
+                        $detail->price;
+									    $msg.="</span>
+                                        
                                 </div>
                             </div>
-                        </div>";
+                        </div>";}
                 }
             }
             echo $msg;
@@ -228,8 +262,10 @@ class IndexProductController extends Controller
 
     public function addToCart(Request $request)
     {
+        $shipCost = 15;
         if ($request->id) {
             $id = $request->id;
+            $qty = $request->qty;
             $product = Product::find($id);
             $newTotal = 0;
             $count = 0;
@@ -244,14 +280,18 @@ class IndexProductController extends Controller
 
 
             // if cart is empty then this the first product
+            if($product->discount > 0){
+
+            }
+
             if (!$cart) {
 
                 $cart = [
                     $id => [
                         "id" => $product->id,
                         "name" => $product->name,
-                        "quantity" => 1,
-                        "price" => $product->price,
+                        "quantity" => $qty,
+                        "price" => $product->price *(1-$product->discount),
                         "img_link" => $product->img_link
                     ]
                 ];
@@ -275,10 +315,19 @@ class IndexProductController extends Controller
                 }
                 $count++;
                 $newTotal = $cart[$id]["price"] * $cart[$id]["quantity"];
+                $subtotal = $newTotal;
                 $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
+                if(session()->get('coupon')){
+                    $discount = session()->get('coupon')["discount"];
+                    if(session()->get('coupon')["type"] == 0)
+                        $newTotal = $newTotal*((100-$discount)/100) + $shipCost;
+                    else
+                        $newTotal = $newTotal- $discount + $shipCost;
+                }
                 $mess2 = strval($newTotal);
                 $mess3 = strval($count);
-                echo json_encode(array($msg, $mess2, $mess3));
+                $mess4 = strval($subtotal);
+                echo json_encode(array($msg, $mess2, $mess3,$mess4));
                 return;
                 //return redirect()->back();
             }
@@ -286,7 +335,7 @@ class IndexProductController extends Controller
             // if cart not empty then check if this product exist then increment quantity
             if (isset($cart[$id])) {
 
-                $cart[$id]['quantity']++;
+                $cart[$id]['quantity']+=$qty;
 
                 session()->put('cart', $cart);
                 foreach ($cart as $details) {
@@ -310,10 +359,19 @@ class IndexProductController extends Controller
                     $newTotal += $item["price"] * $item["quantity"];
                     $count++;
                 }
+                $subtotal = $newTotal;
+                if(session()->get('coupon')){
+                    $discount = session()->get('coupon')["discount"];
+                    if(session()->get('coupon')["type"] == 0)
+                        $newTotal = $newTotal*((100-$discount)/100) + $shipCost;
+                    else
+                        $newTotal = $newTotal- $discount + $shipCost;
+                }
                 $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
                 $mess2 = strval($newTotal);
                 $mess3 = strval($count);
-                echo json_encode(array($msg, $mess2, $mess3));
+                $mess4 = strval($subtotal);
+                echo json_encode(array($msg, $mess2, $mess3,$mess4));
                 return;
                 //return redirect()->back();
 
@@ -323,7 +381,7 @@ class IndexProductController extends Controller
             $cart[$id] = [
                 "id" => $product->id,
                 "name" => $product->name,
-                "quantity" => 1,
+                "quantity" => $qty,
                 "price" => $product->price,
                 "img_link" => $product->img_link
             ];
@@ -350,10 +408,19 @@ class IndexProductController extends Controller
                 $newTotal += $item["price"] * $item["quantity"];
                 $count++;
             }
+            $subtotal = $newTotal;
+            if(session()->get('coupon')){
+                $discount = session()->get('coupon')["discount"];
+                if(session()->get('coupon')["type"] == 0)
+                    $newTotal = $newTotal*((100-$discount)/100) + $shipCost;
+                else
+                    $newTotal = $newTotal- $discount + $shipCost;
+            }
             $mess1 = strval($cart[$id]['quantity']) . " x " . strval($cart[$id]['price']);
             $mess2 = strval($newTotal);
             $mess3 = strval($count);
-            echo json_encode(array($msg, $mess2, $mess3));
+            $mess4 = strval($subtotal);
+            echo json_encode(array($msg, $mess2, $mess3,$mess4));
             return;
 
             //return redirect()->back();
@@ -363,6 +430,7 @@ class IndexProductController extends Controller
 
     public function update(Request $request)
     {
+        $shipCost = 15;
         if ($request->id and $request->quantity) {
             $cart = session()->get('cart');
 
@@ -374,9 +442,18 @@ class IndexProductController extends Controller
             foreach ($cart as $id) {
                 $newTotal += $id["price"] * $id["quantity"];
             }
+            $subtotal = $newTotal;
+            if(session()->get('coupon')){
+                $discount = session()->get('coupon')["discount"];
+                if(session()->get('coupon')["type"] == 0)
+                    $newTotal = $newTotal*((100-$discount)/100) + $shipCost;
+                else
+                    $newTotal = $newTotal- $discount + $shipCost;
+            }
             $mess1 = strval($newPrice);
             $mess2 = strval($newTotal);
-            echo json_encode(array($mess1, $mess2));
+            $mess4 = strval($subtotal);
+            echo json_encode(array($mess1, $mess2,$mess4));
         }
     }
 

@@ -60,13 +60,13 @@
                                 <i class="fs-12 fa fa-minus" aria-hidden="true"></i>
                             </button>
 
-                            <input class="size8 m-text18 t-center num-product" type="number" name="num-product" value="1">
+                            <input class="size8 m-text18 t-center num-product" type="number"  name="num-product" value="1">
 
                             <button class="btn-num-product-up color1 flex-c-m size7 bg8 eff2">
                                 <i class="fs-12 fa fa-plus" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <span class="s-text13 m-r-35">{{$product->stock}} in stock</span>
+                        <span data-for="{{$product->stock}}" class="stock-product s-text13 m-r-35">{{$product->stock}} in stock</span>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@
                     <div class="w-size10 flex-m flex-w">
                         <div class="m-r-20 flex-w btn-addcart-product-detail size9 trans-0-4 m-t-10 m-b-10">
                             <!-- Button -->
-                            <button data-for="{{$product->id}}" class="btn-addcart flex-c-m sizefull bg1 bo-rad-23 hov1 s-text1 trans-0-4">
+                            <button data-for="{{$product->id}}" class="btn-addcart2 flex-c-m sizefull bg1 bo-rad-23 hov1 s-text1 trans-0-4">
                                 Add to Cart
                             </button>
                         </div>
@@ -220,5 +220,23 @@
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    {{--[ +/- num product ]--}}
+    {{--===========================================================--}}
+    <script type="text/javascript">
+        $('.btn-num-product-down').on('click', function (e) {
+            e.preventDefault();
+            var numProduct = Number($(this).next().val());
+            if (numProduct > 1) $(this).next().val(numProduct - 1);
+        });
+    </script>
+    <script type="text/javascript">
+        $('.btn-num-product-up').on('click', function(e){
+            e.preventDefault();
+            var numProduct = Number($(this).prev().val());
+            var stock = $('.stock-product').attr("data-for");
+            if(numProduct < stock )
+                $(this).prev().val(numProduct + 1);
+        });
     </script>
 @endsection

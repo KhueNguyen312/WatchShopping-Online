@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{asset('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
     <!-- Checkbox-Type -->
     <link href="{{asset('plugins/switchery/css/switchery.min.css')}}" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="{{asset('plugins/switchery-master/dist/switchery.css')}}"/>
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{asset('plugins/iCheck/all.css')}}">
 @endsection
@@ -42,6 +44,8 @@
                                 <th>Address</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Ship Cost</th>
+                                <th>Discount</th>
                                 <th>Total Price</th>
                                 <th>Status</th>
                                 <th>Option</th>
@@ -61,13 +65,22 @@
                                     <td>{{$invoice->billing_address}}</td>
                                     <td>{{$invoice->email}}</td>
                                     <td>{{$invoice->phone}}</td>
+                                    <td>{{$invoice->ship_cost}}</td>
+                                    @if(isset($invoice->coupon))
+                                        <td>{{$invoice->coupon->type==0?"%".$invoice->coupon->value:$invoice->coupon->value}}</td>
+                                    @else
+                                        <td>0</td>
+                                    @endif
                                     <td>{{$invoice->total}}</td>
                                     <td>
-                                        <input name="status" type="checkbox" {{$invoice->status==0?"checked disabled":""}} class="flat-red" data-color="#81c868" onchange="checkStatus(this,{{$invoice->id}})"/>
+                                        <input name="status" type="checkbox" {{$invoice->status==1?"checked disabled":""}} class="js-switch" data-color="#81c868" onchange="checkStatus(this,{{$invoice->id}})"/>
                                     </td>
                                     <td>
                                         <a href="{{route('ad.invoice.detail.get',[$invoice->id])}}"
                                            class="btn btn-icon bg-purple " title="More detail"> <i class="fa fa-gear"></i></a>
+                                        <br></br>
+                                        <a href="{{route('ad.invoice.get',[$invoice->id])}}"
+                                           class="btn btn-icon bg-light-blue " title="Print"> <i class="fa fa-print"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -90,6 +103,8 @@
     <script src="{{asset('plugins/switchery/js/switchery.min.js')}}"></script>
     <!-- iCheck 1.0.1 -->
     <script src="{{asset('plugins/iCheck/icheck.min.js')}}"></script>
+
+    <script src="{{asset('plugins/switchery-master/dist/switchery.js')}}"></script>
     <script>
         $(function () {
             $('#tbInvoice').DataTable( {
@@ -98,22 +113,49 @@
                     searchPlaceholder: "Search",
                 }
             } );
-
-            //iCheck for checkbox and radio inputs
-            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                checkboxClass: 'icheckbox_minimal-blue',
-                radioClass   : 'iradio_minimal-blue'
-            })
-            //Red color scheme for iCheck
-            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                checkboxClass: 'icheckbox_minimal-red',
-                radioClass   : 'iradio_minimal-red'
-            })
-            //Flat red color scheme for iCheck
-            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass   : 'iradio_flat-green'
-            })
         })
+    </script>
+    <script type="text/javascript">
+        // var elem = document.querySelectorAll('.js-switch');
+        // var init = new Switchery(elem,{ size: 'small' });
+        if (Array.prototype.forEach) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+            elems.forEach(function(html) {
+                var switchery = new Switchery(html,{ size: 'small' });
+            });
+        } else {
+            var elems = document.querySelectorAll('.js-switch');
+
+            for (var i = 0; i < elems.length; i++) {
+                var switchery = new Switchery(elems[i],{ size: 'small' });
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function checkStatus(obj, id) {
+            if(obj.checked == true){
+
+                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: "{{route('ad.invoice.status')}}",
+                    type: "POST",
+                    async: true,
+                    data: {
+//                        "_token": token,
+                        "_token": CSRF_TOKEN,
+                        "id": id,
+                    },
+                    success: function (data) {
+                        swal("This invoice", "is confirmed sucessfully !", "success");
+                        obj.disabled;
+                    }
+                });
+            } else{
+                swal("", " Can not change back invoice status ", "error");
+                obj.checked;
+            }
+        }
     </script>
 @endsection

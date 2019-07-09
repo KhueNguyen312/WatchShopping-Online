@@ -109,7 +109,33 @@
 
                     </ul>
                     <hr>
-                    <p class="m-text19">Total: <span class="price m-text19"><b class="total">${{$total}}</b></span></p>
+                    <?php $discount = 0; $shipCost = 15;$isFixesCost = true?>
+
+                    <p class="m-text19">Sub Total: <span class="price m-text19"><b class="total">${{$total}}</b></span></p>
+                    <p class="m-text19">Discount: <span class="price m-text19"><b class="total">
+                                @if(session('coupon'))
+                                    <?php $discount = session()->get('coupon')['discount'];
+                                    if(session()->get('coupon')['type'] == 0){
+                                        $symbol = "%";
+                                        $isFixesCost = false;
+                                    }
+                                    else{
+                                        $symbol = "$";
+                                        $isFixesCost = true;
+                                    }
+                                    ?>
+                                    {{$symbol}}{{$discount}}
+                                @else
+                                    ${{$discount}}
+                                @endif
+                            </b></span></p>
+                    <p class="m-text19">Ship: <span class="price m-text19"><b class="total">${{$shipCost}}</b></span></p>
+                    <p class="m-text19">Total: <span class="price m-text19"><b class="total">
+                                @if($isFixesCost)
+                                    ${{$total - $discount+ $shipCost}}
+                                @else
+                                    ${{$total*((100-$discount)/100) + $shipCost}}
+                                @endif</b></span></p>
                 </div>
             </div>
         </div>
