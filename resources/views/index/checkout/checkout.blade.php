@@ -19,20 +19,37 @@
                             <label for="fname"><i class="fa fa-user"></i> Full Name</label>
                             <span id="error_name" class="error">This field is required</span>
                             <div class="size1 bo4 m-r-10 ">
-                                <input id="fname" name="name" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                @if(Auth::guard('user')->user() != null)
+                                <input id="fname" name="name" value="{{Auth::guard('user')->user()->name}}" class="sizefull s-text7 p-l-22 p-r-22" type="text"
                                        placeholder="John M. Doe">
+                                    @else
+                                    <input id="fname" name="name" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                           placeholder="John M. Doe">
+                                @endif
                             </div>
                             <label for="email"><i class="fa fa-envelope m-t-20"></i> Email</label>
                             <span id="error_email" class="error">A valid email address is required</span>
                             <div class="size1 bo4 m-r-10">
-                                <input id="email" name="email" class="sizefull s-text7 p-l-22 p-r-22" type="text"
-                                       placeholder="john@example.com">
+                                @if(Auth::guard('user')->user() != null)
+                                    <input id="email" name="email" value="{{Auth::guard('user')->user()->email}}" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                           placeholder="john@example.com">
+                                @else
+                                    <input id="email" name="email" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                           placeholder="john@example.com">
+                                @endif
+
                             </div>
                             <label for="adr"><i class="fa fa-address-card-o m-t-20"></i> Address</label>
                             <span id="error_address" class="error">A valid address is required</span>
                             <div class="size1 bo4 m-r-10 ">
-                                <input id="adr" name="address" class="sizefull s-text7 p-l-22 p-r-22" type="text"
-                                       placeholder="542 W. 15th Street">
+                                @if(Auth::guard('user')->user() != null)
+                                    <input id="adr" name="address" value="{{Auth::guard('user')->user()->address}}" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                           placeholder="542 W. 15th Street">
+                                @else
+                                    <input id="adr" name="address" class="sizefull s-text7 p-l-22 p-r-22" type="text"
+                                           placeholder="542 W. 15th Street">
+                                @endif
+
                             </div>
                             <label for="city"><i class="fa fa-institution m-t-20"></i> City</label>
                             <span id="error_city" class="error">This field is required</span>
@@ -55,9 +72,16 @@
                                     <label class="m-t-20" for="phone">Phone</label>
                                     <span id="error_phone" class="error">A valid phone is required</span>
                                     <div class="size1 bo4 m-r-10">
-                                        <input id="phone" name="phone" class="sizefull s-text7 p-l-22 p-r-22"
-                                               type="text"
-                                               placeholder="036871654">
+
+                                        @if(Auth::guard('user')->user() != null)
+                                            <input id="phone" name="phone" value="{{Auth::guard('user')->user()->phone}}" class="sizefull s-text7 p-l-22 p-r-22"
+                                                   type="text"
+                                                   placeholder="036871654">
+                                        @else
+                                            <input id="phone" name="phone" class="sizefull s-text7 p-l-22 p-r-22"
+                                                   type="text"
+                                                   placeholder="036871654">
+                                        @endif
                                     </div>
                                 </div>
                             </div>

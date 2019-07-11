@@ -148,7 +148,11 @@
                         <div class="item-slick2 p-l-15 p-r-15">
                         <!-- Block2 -->
                         <div class="block2">
-                            <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                            @if($detail->discount > 0)
+                                <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelsale ">
+                                    @else
+                                        <div class="block2-img wrap-pic-w of-hidden pos-relative ">
+                                            @endif
                                 <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
 
                                 <div class="block2-overlay trans-0-4">
@@ -171,9 +175,19 @@
                                     {{$detail->name}}
                                 </a>
 
-                                <span class="block2-price m-text6 p-r-5">
-									${{$detail->price}}
-								</span>
+                                @if($detail->discount > 0)
+                                    <span class="block2-oldprice m-text7 p-r-5">
+										${{$detail->price}}
+									    </span>
+
+                                    <span class="block2-newprice m-text8 p-r-5">
+										${{$detail->price * (1-$detail->discount)}}
+									    </span>
+                                @else
+                                    <span class="block2-price m-text6 p-r-5">
+										${{$detail->price}}
+									    </span>
+                                @endif
                             </div>
                         </div>
                     </div>

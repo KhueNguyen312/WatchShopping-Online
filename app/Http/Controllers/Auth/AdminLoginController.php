@@ -40,8 +40,8 @@ class AdminLoginController extends Controller
     }
     public function getLogout()
     {
-        if(Auth::check()){
-            Auth::logout();
+        if(Auth::guard('admin')->check()){
+            Auth::guard('admin')->logout();
             return redirect()->route('ad.login');
         }else{
 

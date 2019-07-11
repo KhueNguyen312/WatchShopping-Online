@@ -110,33 +110,21 @@
                                 </span>
 
                                 <div class="dropdown-content dis-none p-t-15 p-b-23">
-
+                                    @foreach($strap as $detail)
+                                        <li><a>
+                                                <label class="s-text10 active1">
+                                                    <input name="sType[]" type="checkbox" class="icheckbox_minimal-blue "
+                                                           value = "{{$detail->id}}">
+                                                    {{$detail->value}}</label>
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </div>
                             </div>
                         </ul>
 
 
-                        <div class="filter-price p-t-22 p-b-50 bo3">
-                            <div class="m-text15 p-b-17">
-                                Price
-                            </div>
-
-                            <div class="wra-filter-bar">
-                                <div id="filter-bar"></div>
-                            </div>
-
-                            <div class="flex-sb-m flex-w p-t-16">
-                                <div class="w-size11">
-                                    <!-- Button -->
-                                    <button class="flex-c-m size4 bg7 bo-rad-15 hov1 s-text14 trans-0-4">
-                                        Filter
-                                    </button>
-                                </div>
-
-                                <div class="s-text3 p-t-10 p-b-10">
-                                    Range: $<span id="value-lower">610</span> - $<span id="value-upper">980</span>
-                                </div>
-                            </div>
+                        <div class="filter-price p-t-22 p-b-50 ">
                         </div>
 
 
@@ -166,18 +154,20 @@
                     <div class="flex-sb-m flex-w p-b-35">
                         <div class="flex-w">
                             <div class="rs2-select2 bo4 of-hidden w-size12 m-t-5 m-b-5 m-r-10">
-                                <select class="selection-2" name="sorting">
-                                    <option>Default Sorting</option>
-                                    <option>Popularity</option>
-                                    <option>Price: low to high</option>
-                                    <option>Price: high to low</option>
+                                <select id="price-sort" class="selection-2" name="sorting">
+                                    <option value="-1" >Price</option>
+                                    <option value="0" >$0.00 - $1000.00</option>
+                                    <option value="1000">$1000 - $2500.00</option>
+                                    <option value="2500">$2500.00 - $5000.00</option>
+                                    <option value="5000">$5000.00+</option>
+
                                 </select>
                             </div>
 
                         </div>
 
                         <span class="s-text8 p-t-5 p-b-5">
-							Showing 1–12 of 16 results
+							Showing 1–12 of {{count($products)}} results
 						</span>
                     </div>
 
@@ -190,7 +180,7 @@
                                     @if($detail->discount > 0)
                                         <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelsale ">
                                             @else
-                                                <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                                                <div class="block2-img wrap-pic-w of-hidden pos-relative">
                                                     @endif
                                         <img class="responsive-image img-thumbnail "  src="{{$detail->img_link}}" alt="IMG-PRODUCT">
                                         <!-- use for live search -->
@@ -203,19 +193,29 @@
                                             </a>
 
                                             <div class=" block2-btn-addcart w-size1 trans-0-4">
+                                                @if(isset($detail->product_id))
                                                 <!-- Button -->
-                                                <button data-for="{{$detail->id}}" class="btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
+                                                <button data-for="{{$detail->product_id}}" class="btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
                                                     Add to Cart
                                                 </button>
+                                                    @else
+                                                        <button data-for="{{$detail->id}}" class="btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4">
+                                                            Add to Cart
+                                                        </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                     <div class="block2-txt p-t-20">
-
-                                        <a href="{{route('index.productDetail.get',[$detail->id])}}" class="block2-name dis-block s-text3 p-b-5">
-                                            {{$detail->name}}
-                                        </a>
-
+                                        @if(isset($detail->product_id))
+                                            <a href="{{route('index.productDetail.get',[$detail->product_id])}}" class="block2-name dis-block s-text3 p-b-5">
+                                                {{$detail->name}}
+                                            </a>
+                                        @else
+                                            <a href="{{route('index.productDetail.get',[$detail->id])}}" class="block2-name dis-block s-text3 p-b-5">
+                                                {{$detail->name}}
+                                            </a>
+                                        @endif
 
                                         @if($detail->discount > 0)
                                             <span class="block2-oldprice m-text7 p-r-5">
@@ -243,6 +243,7 @@
         </div>
         <!-- Container Selection -->
         <div id="dropDownSelect2"></div>
+        </div>
     </section>
 @endsection
 @section('scripts')
@@ -303,13 +304,15 @@
             var brands = [];
             var gender = [];
             var material = []
+            var strap = [];
             // Listen for 'change' event, so this triggers when the user clicks on the checkboxes labels
-            $('input[name="cat[]"],input[name="att[]"],input[name="mType[]"]' ).on('change', function (e) {
+            $('input[name="cat[]"],input[name="att[]"],input[name="mType[]"],input[name="sType[]"]' ).on('change', function (e) {
 
                 e.preventDefault();
                 brands = []; // reset
                 gender = [];
-                material = []
+                material = [];
+                strap=[];
 
                 $('input[name="cat[]"]:checked').each(function()
                 {
@@ -324,6 +327,10 @@
                 {
                     material.push($(this).val());
                 });
+                $('input[name="sType[]"]:checked').each(function()
+                {
+                    strap.push($(this).val());
+                });
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 var name = $('.cat-name').attr('name');
                 $.ajax({
@@ -334,6 +341,7 @@
                         "brands": brands,
                         "gender":gender,
                         "material": material,
+                        "strap": strap,
                         "page_type": "gender",
                         "name": name
                     },
@@ -344,7 +352,7 @@
                     success: function (dt) {
                         $('.filter-result').html(dt);
                         $("#tab").pagination({
-                            items: 2,
+                            items: 12,
                             contents: 'filter-result',
                             previous: 'Previous',
                             next: 'Next',
@@ -372,7 +380,7 @@
     <script>
         $(document).ready(function () {
             $("#tab").pagination({
-                items: 2,
+                items: 12,
                 contents: 'filter-result',
                 previous: 'Previous',
                 next: 'Next',

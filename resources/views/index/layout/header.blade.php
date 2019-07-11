@@ -102,15 +102,7 @@
                         </li>
 
                         <li>
-                            <a href="blog.html">Blog</a>
-                        </li>
-
-                        <li>
-                            <a href="about.html">About</a>
-                        </li>
-
-                        <li>
-                            <a href="contact.html">Contact</a>
+                            <a href="{{route('index.contact.get')}}">Contact</a>
                         </li>
                     </ul>
                 </nav>
@@ -348,13 +340,6 @@
                     <a href="cart.html">Features</a>
                 </li>
 
-                <li class="item-menu-mobile">
-                    <a href="blog.html">Blog</a>
-                </li>
-
-                <li class="item-menu-mobile">
-                    <a href="about.html">About</a>
-                </li>
 
                 <li class="item-menu-mobile">
                     <a href="contact.html">Contact</a>

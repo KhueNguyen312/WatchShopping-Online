@@ -76,8 +76,8 @@
                                         <a href="{{route('ad.coupon.form.get',[$detail->id])}}"
                                            class="btn btn-icon bg-light-blue " title="Edit"> <i class="fa fa-pencil"></i></a>
 
-                                        <a href="#"
-                                           class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>
+                                        <button href="#"
+                                           class="delete btn btn-icon bg-red " data-for="{{$detail->id}}" title="Delete"> <i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -128,5 +128,37 @@
                 var switchery = new Switchery(elems[i],{ size: 'small' });
             }
         }
+    </script>
+
+    <script type="text/javascript">
+        $('.delete').on('click',function (e) {
+            e.preventDefault();
+            var ele = $(this);
+            swal({
+                title: "Are you sure?",
+                text: "this coupon will be disable !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: '{{route('ad.coupon.dis')}}',
+                            method: "post",
+                            data: {_token: CSRF_TOKEN, id: ele.attr("data-for")},
+                            success: function (response) {
+                                window.location.reload();
+                            },
+                            error: function(xhr, textStatus, error){
+                                alert(error + "\r\n" + xhr.responseText);
+                            },
+                        });
+                    } else {
+
+                    }
+                });
+        });
     </script>
 @endsection

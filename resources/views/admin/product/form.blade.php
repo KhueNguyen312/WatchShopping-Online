@@ -81,7 +81,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Image list</label>
-                                <textarea name="ïmg_list" class="form-control" rows="3" placeholder="Enter ..."
+                                <textarea name="img_list" class="form-control" rows="3" placeholder="Enter ..."
                                 >{{old('img_list',isset($product)?$product->img_list:"")}}</textarea>
                             </div>
                             <div class="form-group">

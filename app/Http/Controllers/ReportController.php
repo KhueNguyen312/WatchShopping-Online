@@ -20,7 +20,7 @@ class ReportController extends Controller
         $report = DB::table('order')->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('product','product.id','=','order_detail.product_id')
             ->select('product.id', 'product.name as name',DB::raw('sum(order_detail.qty) as qty'),DB::raw('(product.price*sum(order_detail.qty) - sum(order_detail.detail_price) )as discount'),
-                DB::raw('sum(order_detail.detail_price) as totalprice'))->whereDate('order_date','>',$start)->whereDate('order_date','<',$end)
+                DB::raw('sum(order_detail.detail_price) as totalprice'))->whereDate('order_date','>=',$start)->whereDate('order_date','<=',$end)->where('order.status','=',1)
             ->groupBy('product.id','name','qty','discount','product.price')->get();
 //        dd($report);
         $result = "";
@@ -47,7 +47,7 @@ class ReportController extends Controller
               <th>$dis</th>
               <th>$total</th>
                </tr>";
-        $invoice = Invoice::where('order_date','>',$start)->where('order_date','<',$end)
+        $invoice = Invoice::where('order_date','>=',$start)->where('order_date','<=',$end)->where('order.status','=',1)
             ->get();
         $reveneu = 0;
         foreach ($invoice as $detail){

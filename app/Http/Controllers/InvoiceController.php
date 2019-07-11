@@ -153,8 +153,22 @@ class InvoiceController extends Controller
         if ($request->ajax()) {
             $id = $request->id;
             $invoice = Invoice::find($id);
+            $invoiceDetail = InvoiceDetail::where('order_id','=',$id)->get();
+            foreach($invoiceDetail as $i => $detail ){
+                $pro = Product::find($detail->product_id);
+                if($pro->stock < $detail->qty){
+                    echo "Out of stock";
+                    return;
+                }
+            }
+            foreach($invoiceDetail as $i => $detail ){
+                $pro = Product::find($detail->product_id);
+                $pro->stock = $pro->stock - $detail->qty;
+                $pro->save();
+            }
             $invoice->status = 1;
             $invoice->save();
+            echo "Success";
         }
     }
 }

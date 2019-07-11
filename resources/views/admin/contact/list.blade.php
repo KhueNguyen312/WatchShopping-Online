@@ -1,6 +1,6 @@
 @extends('admin.layout.index')
 @section('title')
-    <title>List of Invoices</title>
+    <title>List of feedback</title>
 @endsection
 @section('styles')
     <!-- DataTables -->
@@ -16,12 +16,12 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Invoices
-            <small>Management your invoices</small>
+            Feedback
+            <small>Management your feedback</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{route('ad.dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Invoices</li>
+            <li class="active">Feedback</li>
         </ol>
     </section>
     <section class="content">
@@ -29,58 +29,32 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">List of invoices</h3>
+                        <h3 class="box-title">List of feedback</h3>
 
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="tbInvoice" class="table table-hover table-bordered">
+                        <table id="tb-feedback" class="table table-hover table-bordered">
                             <thead>
                             <tr>
                                 <th style="width: 10px"># </th>
-                                <th>Account</th>
-                                <th>Receiver</th>
-                                <th>Order date</th>
-                                <th>Address</th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Ship Cost</th>
-                                <th>Discount</th>
-                                <th>Total Price</th>
+                                <th>Message</th>
                                 <th>Status</th>
-                                <th>Option</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($invoices as $i => $invoice)
+                            @foreach($contact as $i => $detail)
                                 <tr>
                                     <td>{{++$i.'.'}}</td>
-                                    @if(isset($invoice->customer))
-                                        <td>{{$invoice->customer->name}}</td>
-                                    @else
-                                        <td>Guest</td>
-                                    @endif
-                                    <td>{{$invoice->receiver}}</td>
-                                    <td>{{$invoice->order_date}}</td>
-                                    <td>{{$invoice->billing_address}}</td>
-                                    <td>{{$invoice->email}}</td>
-                                    <td>{{$invoice->phone}}</td>
-                                    <td>{{$invoice->ship_cost}}</td>
-                                    @if(isset($invoice->coupon))
-                                        <td>{{$invoice->coupon->type==0?"%".$invoice->coupon->value:$invoice->coupon->value}}</td>
-                                    @else
-                                        <td>0</td>
-                                    @endif
-                                    <td>{{$invoice->total}}</td>
+                                    <td>{{$detail->name}}</td>
+                                    <td>{{$detail->email}}</td>
+                                    <td>{{$detail->phone}}</td>
+                                    <td>{{$detail->message}}</td>
                                     <td>
-                                        <input name="status" type="checkbox" {{$invoice->status==1?"checked disabled":""}} class="js-switch" data-color="#81c868" onchange="checkStatus(this,{{$invoice->id}})"/>
-                                    </td>
-                                    <td>
-                                        <a href="{{route('ad.invoice.detail.get',[$invoice->id])}}"
-                                           class="btn btn-icon bg-purple " title="More detail"> <i class="fa fa-gear"></i></a>
-                                        <br></br>
-                                        <a href="{{route('ad.invoice.get',[$invoice->id])}}"
-                                           class="btn btn-icon bg-light-blue " title="Print"> <i class="fa fa-print"></i></a>
+                                        <input name="status" type="checkbox" {{$detail->status==1?"checked disabled":""}} class="js-switch" data-color="#81c868" onchange="checkStatus(this,{{$detail->id}})"/>
                                     </td>
                                 </tr>
                             @endforeach
@@ -107,7 +81,7 @@
     <script src="{{asset('plugins/switchery-master/dist/switchery.js')}}"></script>
     <script>
         $(function () {
-            $('#tbInvoice').DataTable( {
+            $('#tb-feedback').DataTable( {
                 language: {
                     search: '<i class="btn btn-default fa fa-search"></i>',
                     searchPlaceholder: "Search",
@@ -139,7 +113,7 @@
 
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
-                    url: "{{route('ad.invoice.status')}}",
+                    url: "{{route('ad.contact.status')}}",
                     type: "POST",
                     async: true,
                     data: {
@@ -148,20 +122,12 @@
                         "id": id,
                     },
                     success: function (data) {
-                        if(data=="Success"){
-                            swal("This invoice", "is confirmed sucessfully !", "success");
-                            obj.disabled;
-                        }
-                       else{
-                            swal("Out of stock", "Make sure that Stock Availability!", "warning").then((value) =>{
-                                window.location.reload();
-                            });
-
-                        }
+                        swal("This contact", "is checked sucessfully !", "success");
+                        obj.disabled;
                     }
                 });
             } else{
-                swal("", " Can not change back invoice status ", "error");
+                swal("", " Can not change back contact status ", "error");
                 obj.checked;
             }
         }

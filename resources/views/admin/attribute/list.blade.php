@@ -53,8 +53,8 @@
 
                                     <a href="{{route('ad.attribute.form.post',[$att->id])}}"
                                        class="btn btn-icon bg-light-blue " title="Edit"> <i class="fa fa-pencil"></i></a>
-                                    <a href="#"
-                                       class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>
+                                    {{--<a href="#"--}}
+                                       {{--class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>--}}
                                 </td>
                             </tr>
                             @endforeach
@@ -99,8 +99,8 @@
 
                                         <a href="{{route('ad.attribute.attValueForm.get',[$detail->id])}}"
                                            class="btn btn-icon bg-light-blue " title="Edit"> <i class="fa fa-pencil"></i></a>
-                                        <a href="#"
-                                           class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>
+                                        {{--<a href="#"--}}
+                                           {{--class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>--}}
                                     </td>
                                 </tr>
                             @endforeach

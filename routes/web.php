@@ -17,7 +17,7 @@ Route::post("ad/login", "Auth\AdminLoginController@checklogin")->name('ad.checkl
 Route::get("ad/logout", "Auth\AdminLoginController@getLogout")->name('ad.logout');
 Route::group(['prefix' => 'ad', 'middleware' => 'adminLogin'], function () {
 
-    Route::get("home", "AdminDashboardController@index")->name('ad.dashboard')->middleware('adminLogin');
+    Route::get("home", "AdminContactController@contact")->name('ad.dashboard')->middleware('adminLogin');
 
     Route::get("attribute", "AdminAttributeController@getListAttributes")->name("ad.attribute.list.get");
     Route::get("attribute/form/{id}","AdminAttributeController@getForm")->name("ad.attribute.form.get");
@@ -36,6 +36,7 @@ Route::group(['prefix' => 'ad', 'middleware' => 'adminLogin'], function () {
     Route::post("product/form/{id}","ProductController@createOrUpdateProduct")->name("ad.product.form.post");
     Route::get("loadAtt/{id}", "AdminAttributeController@getAttValue")->name("ad.loadAtt");
     Route::delete('deleteAtt/{id}', "ProductController@removeAttribute")->name("ad.deleteAtt");
+    Route::post('changeStatus', 'ProductController@changeStatus')->name('ad.product.dis');
 
     Route::get("invoice", "InvoiceController@getListInvoices")->name("ad.invoice.list.get");
     Route::post("change-status", "InvoiceController@changeInvoiceStatus")->name("ad.invoice.status");
@@ -46,6 +47,9 @@ Route::group(['prefix' => 'ad', 'middleware' => 'adminLogin'], function () {
     Route::get("user", "AdminController@getListUser")->name("ad.user.list.get");
     Route::get("profile/{id}", "AdminController@getUserInfo")->name("ad.user.profile");
     Route::post("profile/update/{id}","AdminController@updateUserInfo")->name("ad.admin.edit");
+    Route::get('/customer', 'CustomerController@getCustomer')->name('ad.customer.list.get');
+    Route::get('/user/form/{id}', 'AdminController@getForm')->name('ad.admin.form.get');
+    Route::post("profile/add/{id}","AdminController@addUser")->name("ad.admin.add");
 
     Route::get("sale-report", "ReportController@getReport")->name("ad.report.get");
     Route::get("sale-report/load", "ReportController@showDetail")->name("ad.report.load");
@@ -53,6 +57,10 @@ Route::group(['prefix' => 'ad', 'middleware' => 'adminLogin'], function () {
     Route::get("coupon", "CouponController@getListCoupon")->name("ad.coupon.list.get");
     Route::get("coupon/form/{id}","CouponController@getForm")->name("ad.coupon.form.get");
     Route::post("coupon/form/{id}","CouponController@createOrUpdateCoupon")->name("ad.coupon.form.post");
+    Route::post('coupon/changeStatus', 'CouponController@changeStatus')->name('ad.coupon.dis');
+
+    Route::get("contact", "AdminContactController@contact")->name("ad.contact.get");
+    Route::post("change-contact-status", "AdminContactController@changeContactStatus")->name("ad.contact.status");
 });
 
 
@@ -71,6 +79,7 @@ Route::get('/men-watches','IndexProductController@getMenWatches')->name('index.m
 Route::get('/sale','IndexProductController@getSaleWatches')->name('index.sale.get');
 Route::get('/ladies-watches','IndexProductController@getLadiesWatches')->name('index.ladiesWatches.get');
 Route::post('/watches/filter', 'IndexProductController@filterProducts')->name('getfilter');
+Route::post('/watches/sort', 'IndexProductController@filterCost')->name('index.sort');
 Route::get('/checkout','CheckOutController@checkOut')->name('index.checkout.get');
 Route::post('/ordered', 'CheckOutController@ordered')->name('index.checkout.ordered');
 Route::post('/check-coupon', 'CouponController@checkCoupon')->name('index.checkCoupon');
@@ -79,6 +88,8 @@ Route::get('/login', 'UserLoginController@getLoginForm')->name('index.login.get'
 Route::post("/login", "UserLoginController@checkLogin")->name('index.checkLogin');
 Route::get('/logout', 'UserLoginController@getLogout')->name('index.logout.get');
 Route::get('/register', 'UserLoginController@getRegisterForm')->name('index.register.get');
+Route::get('/contact', 'IndexContactController@getContact')->name('index.contact.get');
+Route::post('/contact', 'IndexContactController@submitFeedBack')->name('index.contact.post');
 //admin
 Route::group(['prefix' => 'ad'], function () {
 

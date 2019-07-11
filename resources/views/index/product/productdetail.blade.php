@@ -24,18 +24,16 @@
                                 <img src="{{$product->img_link}}" alt="IMG-PRODUCT">
                             </div>
                         </div>
-
-                        <div class="item-slick3" data-thumb="{{$product->img_link}}">
+                        @if($product->img_list != null)
+                            <?php $segments = preg_split('/[\s]+/', $product->img_list ) ?>
+                        @foreach($segments as $seg)
+                        <div class="item-slick3" data-thumb="{{$seg}}">
                             <div class="wrap-pic-w">
-                                <img src="{{$product->img_link}}" alt="IMG-PRODUCT">
+                                <img src="{{$seg}}" alt="IMG-PRODUCT">
                             </div>
                         </div>
-
-                        <div class="item-slick3" data-thumb="{{$product->img_link}}">
-                            <div class="wrap-pic-w">
-                                <img src="{{$product->img_link}}" alt="IMG-PRODUCT">
-                            </div>
-                        </div>
+                                @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -45,9 +43,22 @@
                     {{$product->name}}
                 </h4>
 
-                <span class="m-text17">
-					${{$product->price}}
-				</span>
+                {{--<span class="m-text17">--}}
+					{{--${{$product->price}}--}}
+				{{--</span>--}}
+                @if($product->discount > 0)
+                    <span class="block2-oldprice m-text17 p-r-5" style="text-decoration: line-through; font-size: 25px">
+										${{$product->price}}
+									    </span>
+
+                    <span style="color: #e65540;" class="block2-newprice m-text17 p-r-5">
+										${{$product->price * (1-$product->discount)}}
+									    </span>
+                @else
+                    <span class="m-text17">
+										${{$product->price}}
+									    </span>
+                @endif
 
                 <p class="bo7 s-text8 p-t-10">
 
@@ -88,10 +99,6 @@
                 </div>
                 <!--  -->
 
-                <div class="p-b-45">
-                    <span class="s-text8 m-r-35">SKU: MUG-01</span>
-                    <span class="s-text8">Categories: Mug, Design</span>
-                </div>
 
                 <!--  -->
                 <div class="wrap-dropdown-content bo6 p-t-15 p-b-14 active-dropdown-content">
@@ -159,7 +166,7 @@
 
                     <div class="dropdown-content dis-none p-t-15 p-b-23">
                         <p class="s-text8">
-                            Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
+                            No reviews
                         </p>
                     </div>
                 </div>
@@ -182,7 +189,7 @@
                     <div class="item-slick2 p-l-15 p-r-15">
                         <!-- Block2 -->
                         <div class="block2">
-                            <div class="block2-img wrap-pic-w of-hidden pos-relative block2-labelnew">
+                            <div class="block2-img wrap-pic-w of-hidden pos-relative ">
                                 <img class="responsive-image img-thumbnail" src="{{$p->img_link}}" alt="IMG-PRODUCT">
 
                                 <div class="block2-overlay trans-0-4">

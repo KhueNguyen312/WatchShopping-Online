@@ -59,6 +59,7 @@ class ProductController extends Controller
         }
         else {
             Product::findOrFail($id)->update($request->all() );
+
             return redirect()->route('ad.product.form.get',[$id])->with('success','Updated successfully.');
         }
     }
@@ -99,4 +100,10 @@ class ProductController extends Controller
         return Response()->json($productAttribute);
     }
 
+    public function changeStatus(Request $request){
+        $id = $request->id;
+        $product = Product::findOrFail($id);
+        $product->status = 1;
+        $product->save();
+    }
 }

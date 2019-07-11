@@ -33,8 +33,8 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">MAIN NAVIGATION</li>
                 <li>
-                    <a href="{{route('ad.dashboard')}}">
-                        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <a href="{{route('ad.contact.get')}}">
+                        <i class="fa fa-dashboard"></i> <span>Feedback</span>
                     </a>
                 </li>
 
@@ -83,23 +83,7 @@
                     <ul class="treeview-menu">
                         <li><a href="{{route('ad.user.profile',[Auth::guard('admin')->user()->id])}}"><i class="fa fa-circle-o"></i>Profile</a></li>
                         <li><a href="{{route('ad.user.list.get')}}"><i class="fa fa-circle-o"></i>Admin</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i>Customer Management</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-folder"></i> <span>Other</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="pages/examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
-                        <li><a href="pages/examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
-                        <li><a href="pages/examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
-                        <li><a href="pages/examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
-                        <li><a href="pages/examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
-                        <li><a href="pages/examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
+                        <li><a href="{{route('ad.customer.list.get')}}"><i class="fa fa-circle-o"></i>Customer Management</a></li>
                     </ul>
                 </li>
                 <li><a href="{{route('index.home.get')}}"><i class="fa fa-book"></i> <span>Home Page</span></a></li>

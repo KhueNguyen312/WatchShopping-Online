@@ -53,8 +53,11 @@ class IndexProductController extends Controller
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
         $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
 
+        $strap_id = Attribute::select('id')->where('name', "Bracelet material")->value('id');
+        $strap = AttributeValue::orderBy("value", "DESC")->where('att_id', $strap_id)->get();
+
         $products = Product::orderBy("id", "DESC")->where('status', 0)->get();
-        return view('index.product.product', compact('products', 'brands', 'genders', 'movements'));
+        return view('index.product.product', compact('products', 'brands', 'genders', 'movements','strap'));
     }
 
     public function getProductByBrand($id)
@@ -65,8 +68,12 @@ class IndexProductController extends Controller
 
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
         $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
+
+        $strap_id = Attribute::select('id')->where('name', "Bracelet material")->value('id');
+        $strap = AttributeValue::orderBy("value", "DESC")->where('att_id', $strap_id)->get();
+
         $brand = Brand::where('id', $id)->get();
-        return view('index.product.brand', compact('products', 'genders', 'movements', 'brand'));
+        return view('index.product.brand', compact('products', 'genders', 'movements', 'brand','strap'));
     }
 
     public function getMenWatches()
@@ -79,13 +86,16 @@ class IndexProductController extends Controller
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
         $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
 
+        $strap_id = Attribute::select('id')->where('name', "Bracelet material")->value('id');
+        $strap = AttributeValue::orderBy("value", "DESC")->where('att_id', $strap_id)->get();
+
         $products = Product::orderBy("product.id", "DESC")->join('product_attribute', 'product.id', '=', 'product_attribute.product_id')->
         join('attribute_value', 'attribute_value.id', '=', 'product_attribute.att_value_id')->where('attribute_value.value', 'like', 'men%')
             ->orWhere('attribute_value.value', 'like', '%nam%')->get();
         //create a array contains what need to show in html page
         $data = array("name" => "Men's Watches", "banner" => "https://www.collectoffers.com/EditorImages/banner-man-watch.jpg",
             "see_also_name" => "Ladies Watches", "link" => "/watchshoppingonline/public/ladies-watches");
-        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands','strap'));
     }
     public function getLadiesWatches()
     {
@@ -97,14 +107,18 @@ class IndexProductController extends Controller
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
         $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
 
+
+        $strap_id = Attribute::select('id')->where('name', "Bracelet material")->value('id');
+        $strap = AttributeValue::orderBy("value", "DESC")->where('att_id', $strap_id)->get();
+
         $products = Product::orderBy("product.id", "DESC")->join('product_attribute', 'product.id', '=', 'product_attribute.product_id')->
         join('attribute_value', 'attribute_value.id', '=', 'product_attribute.att_value_id')->where('attribute_value.value', 'like', '%ladi%')
             ->orWhere('attribute_value.value', 'like', '%women%')
-            ->orWhere('attribute_value.value', 'like', '%nu%')->get();
+            ->orWhere('attribute_value.value', 'like', 'Nu')->get();
         //create a array contains what need to show in html page
         $data = array("name" => "Ladies Watches", "banner" => "http://watchmarkaz.pk/img/brandspic/1186067550000.jpg",
             "see_also_name" => "Mens Watches", "link" => "/watchshoppingonline/public/men-watches");
-        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands','strap'));
     }
     public function getSaleWatches(){
         $brands = Brand::orderBy("name", "DESC")->get();
@@ -115,11 +129,14 @@ class IndexProductController extends Controller
         $movement_id = Attribute::select('id')->where('name', "Movement")->value('id');
         $movements = AttributeValue::orderBy("value", "DESC")->where('att_id', $movement_id)->get();
 
+        $strap_id = Attribute::select('id')->where('name', "Bracelet material")->value('id');
+        $strap = AttributeValue::orderBy("value", "DESC")->where('att_id', $strap_id)->get();
+
         $products = Product::orderBy("product.id", "DESC")->where('product.discount', '>', 0)->get();
         //create a array contains what need to show in html page
         $data = array("name" => "Sale Watches", "banner" => "https://d3l9endf6kojd4.cloudfront.net/media/wysiwyg/sale-menu-banner1.jpg",
             "see_also_name" => "All watches", "link" => "/watchshoppingonline/public/watches");
-        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands'));
+        return view('index.product.categorytemplate', compact('products', 'data', 'genders', 'movements', 'brands','strap'));
     }
 
     public function filterProducts(Request $request)
@@ -130,6 +147,7 @@ class IndexProductController extends Controller
             $brands = $request->brands;
             $gender = $request->gender;
             $material = $request->material;
+            $strap = $request->strap;
             $pageType = $request->page_type;
             if ($pageType == "gender") {
                 if($request->name == "Men's Watches")
@@ -167,6 +185,11 @@ class IndexProductController extends Controller
                 $query .= "
                 AND product.id in (" . $temp . " AND product_attribute.att_value_id IN('" . $material_filter . "'))";
             }
+            if ($strap != null) {
+                $strap_filter = implode("','", $strap);
+                $query .= "
+                AND product.id in (" . $temp . " AND product_attribute.att_value_id IN('" . $strap_filter . "'))";
+            }
             if ($pageType == "brand") {
                 $brand_id = $request->id;
                 $query .= "AND product.brand_id = " . $brand_id;
@@ -199,63 +222,8 @@ class IndexProductController extends Controller
 //
 //            }
 
-            if (count($products) == 0)
-                $msg = "";
-            else {
-                foreach ($products as $detail) {
-                    $msg .= "<div class=\"col-sm-12 col-md-6 col-lg-4 p-b-50\">
-                            <!-- Block2 -->
-                            <div class=\"block2\">";
-                               if ($detail->discount > 0)
-                                       $msg .="<div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelsale \">";
-                                           else
-                                                $msg .= "<div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelnew\">";
-                                                  
-                                    $msg .= "<img class=\"responsive-image img-thumbnail \"  src=\"{$detail->img_link}\" alt=\"IMG-PRODUCT\">
-                                    <div class=\"block2-overlay trans-0-4\">
-                                        <a href=\"#\" class=\"block2-btn-addwishlist hov-pointer trans-0-4\">
-                                            <i class=\"icon-wishlist icon_heart_alt\" aria-hidden=\"true\"></i>
-                                            <i class=\"icon-wishlist icon_heart dis-none\" aria-hidden=\"true\"></i>
-                                        </a>
-
-                                        <div class=\"block2-btn-addcart w-size1 trans-0-4\">
-                                            <!-- Button -->
-                                            <button data-for=\"{$detail->id}\" class=\" btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4\">
-                                                Add to Cart
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class=\"block2-txt p-t-20\">
-                                    <a href=\"/watchshoppingonline/public/product-detail/{$detail->id}\" class=\"block2-name dis-block s-text3 p-b-5\">
-                                        {$detail->name}
-                                    </a>";
-                                    
-
-                                     if($detail->discount > 0) {
-                                         $msg .= "  <span class=\"block2-oldprice m-text7 p-r-5\">";
-                                         $msg .= "$";
-
-                                         $msg.= strval( $detail->price);
-                                         $msg .= "</span>
-
-                                            <span class=\"block2-newprice m-text8 p-r-5\">";
-                                         $msg .= "$";
-                                         $msg.= strval($detail->price * (1 - $detail->discount));
-                                         $msg .= "</span>";
-                                     }else{
-                                            $msg.="<span class=\"block2-price m-text6 p-r-5\">";
-										$msg.="$";
-                        $detail->price;
-									    $msg.="</span>
-                                        
-                                </div>
-                            </div>
-                        </div>";}
-                }
-            }
-            echo $msg;
+            echo $this->printListProduct($products);
+            return;
         }
 
     }
@@ -473,4 +441,88 @@ class IndexProductController extends Controller
             session()->flash('success', 'Product removed successfully');
         }
     }
+
+    public function filterCost(Request $request){
+        if($request->value == 0)
+            $query = "SELECT * FROM `product` WHERE `price`*(1-discount) >= '$request->value' and `price`*(1-discount) <=1000 order by `price`*(1-discount) ASC";
+        else if($request->value == 1000){
+
+            $query = "SELECT * FROM `product` WHERE `price`*(1-discount) >= '$request->value' and `price`*(1-discount) <=2500 order by `price`*(1-discount) ASC";
+        }else if($request->value == 2500){
+            $query = "SELECT * FROM `product` WHERE `price`*(1-discount) >= '$request->value' and `price`*(1-discount) <=5000 order by `price`*(1-discount) ASC";
+        }else if($request->value == 5000){
+            $query = "SELECT * FROM `product` WHERE `price`*(1-discount) >= '$request->value' order by `price`*(1-discount) ASC";
+        }else{
+            $products = Product::orderBy("id","DESC")->where('status','0')->get();
+            echo $this->printListProduct($products);
+            return;
+        }
+        $products = DB::select($query);
+        echo $this->printListProduct($products);
+        return;
+    }
+    public function printListProduct($products){
+        $msg="";
+        if (count($products) == 0)
+            $msg = "";
+        else {
+            foreach ($products as $detail) {
+                $msg .= "<div class=\"col-sm-12 col-md-6 col-lg-4 p-b-50\">
+                            <!-- Block2 -->
+                            <div class=\"block2\">";
+                if ($detail->discount > 0)
+                    $msg .="<div class=\"block2-img wrap-pic-w of-hidden pos-relative block2-labelsale \">";
+                else
+                    $msg .= "<div class=\"block2-img wrap-pic-w of-hidden pos-relative \">";
+
+                $msg .= "<img class=\"responsive-image img-thumbnail \"  src=\"{$detail->img_link}\" alt=\"IMG-PRODUCT\">
+                                    <div class=\"block2-overlay trans-0-4\">
+                                        <a href=\"#\" class=\"block2-btn-addwishlist hov-pointer trans-0-4\">
+                                            <i class=\"icon-wishlist icon_heart_alt\" aria-hidden=\"true\"></i>
+                                            <i class=\"icon-wishlist icon_heart dis-none\" aria-hidden=\"true\"></i>
+                                        </a>
+
+                                        <div class=\"block2-btn-addcart w-size1 trans-0-4\">
+                                            <!-- Button -->
+                                            <button data-for=\"{$detail->id}\" class=\" btn-addcart flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4\">
+                                                Add to Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=\"block2-txt p-t-20\">
+                                    <a href=\"/watchshoppingonline/public/product-detail/{$detail->id}\" class=\"block2-name dis-block s-text3 p-b-5\">
+                                        {$detail->name}
+                                    </a>";
+
+
+                if($detail->discount > 0) {
+                    $msg .= "  <span class=\"block2-oldprice m-text7 p-r-5\">";
+                    $msg .= "$";
+
+                    $msg.= strval( $detail->price);
+                    $msg .= "</span>
+
+                                            <span class=\"block2-newprice m-text8 p-r-5\">";
+                    $msg .= "$";
+                    $msg.= strval($detail->price * (1 - $detail->discount));
+                    $msg .= "</span>";
+                }else{
+                    $msg.="<span class=\"block2-price m-text6 p-r-5\">";
+                    $msg.="$";
+                    $msg.= strval( $detail->price);
+                    $msg.="</span>"
+                    ;}
+                $msg.=" </div>
+                            </div>
+                        </div>";
+            }
+            $msg.="</div>";
+        }
+//        echo $msg;
+        return $msg;
+    }
+
 }
+

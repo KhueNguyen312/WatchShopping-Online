@@ -310,6 +310,30 @@
 <script src="{{asset('index_assets/js/main.js')}}"></script>
 <!--===============================================================================================-->
 <script src="{{asset('js/pagination.js')}}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#price-sort').on('change', function() {
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            var value = parseInt(this.value);
+            $.ajax({
+                url: "{{route('index.sort')}}",
+                type: "post",
+                data: {
+                    _token: CSRF_TOKEN, value: value},
+                success: function (response) {
+                    //alert(response[0]);
+                    $('.filter-result').html(response);
+
+                },
+                error: function(xhr, textStatus, error){
+                    alert(error + "\r\n" + xhr.responseText);
+                },
+            });
+        });
+    })
+
+</script>
 @yield('scripts')
 </body>
 </html>

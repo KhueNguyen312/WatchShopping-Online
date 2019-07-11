@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Coupon;
 use App\Invoice;
+use App\Product;
+use Auth;
 use Illuminate\Http\Request;
 
 class CheckOutController extends Controller
@@ -30,6 +33,9 @@ class CheckOutController extends Controller
                     $total = $total*((100-$discount)/100) + $shipCost;
                 else
                     $total = $total- $discount + $shipCost;
+                $coupon = Coupon::find($code_id);
+                $coupon->status = 1;
+                $coupon->save();
             }
             $invoice = Invoice::create([
                 'receiver' => $request->name,
@@ -47,7 +53,9 @@ class CheckOutController extends Controller
                     'detail_price' => ($product['price']*$product['quantity']),
                     'qty' => $product['quantity'],
                 ]);
+
             }
+
             session()->forget('cart');
             session()->forget('coupon');
         }

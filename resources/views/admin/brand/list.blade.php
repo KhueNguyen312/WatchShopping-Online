@@ -62,8 +62,8 @@
                                         <a href="{{route('ad.brand.form.get',[$brand->id])}}"
                                            class="btn btn-icon bg-light-blue " title="Edit"> <i class="fa fa-pencil"></i></a>
                                         <br></br>
-                                        <a href="#"
-                                           class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>
+                                        {{--<a href="#"--}}
+                                           {{--class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>--}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -89,8 +89,8 @@
                 columnDefs: [ {
                     targets: 4,
                     render: function ( data, type, row ) {
-                        return type === 'display' && data.length > 500 ?
-                            data.substr( 0, 500 ) +'…' :
+                        return type === 'display' && data.length > 250 ?
+                            data.substr( 0, 250 ) +'…' :
                             data;
                     }
                 } ],

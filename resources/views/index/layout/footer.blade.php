@@ -40,13 +40,13 @@
 
                 <li class="p-b-9">
                     <a href="#" class="s-text7">
-                        Dresses
+                        Couple
                     </a>
                 </li>
 
                 <li class="p-b-9">
                     <a href="#" class="s-text7">
-                        Sunglasses
+                        On sale
                     </a>
                 </li>
             </ul>

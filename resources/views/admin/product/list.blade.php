@@ -78,8 +78,8 @@
                                         <a href="{{route('ad.product.detailForm.get',[$product->id])}}"
                                            class="btn btn-icon bg-purple " title="More detail"> <i class="fa fa-gear"></i></a>
                                         <br></br>
-                                        <a href="#"
-                                           class="btn btn-icon bg-red " title="Delete"> <i class="fa fa-trash-o"></i></a>
+                                        <button href="#"
+                                           class="delete btn btn-icon bg-red " data-for="{{$product->id}}" title="Delete"> <i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -109,12 +109,51 @@
                             data.substr( 0, 100 ) +'…' :
                             data;
                     }
-                } ],
+                },{
+                    targets: 4,
+                    render: function ( data, type, row ) {
+                        return type === 'display' && data.length > 10 ?
+                            data.substr( 0, 10 ) +'…' :
+                            data;
+                    }
+                }
+                ],
                 language: {
                     search: '<i class="btn btn-default fa fa-search"></i>',
                     searchPlaceholder: "Search",
                 }
             } );
         })
+    </script>
+    <script type="text/javascript">
+        $('.delete').on('click',function (e) {
+            e.preventDefault();
+            var ele = $(this);
+            swal({
+                title: "Are you sure?",
+                text: "this product will be disable !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: '{{route('ad.product.dis')}}',
+                            method: "post",
+                            data: {_token: CSRF_TOKEN, id: ele.attr("data-for")},
+                            success: function (response) {
+                                window.location.reload();
+                            },
+                            error: function(xhr, textStatus, error){
+                                alert(error + "\r\n" + xhr.responseText);
+                            },
+                        });
+                    } else {
+
+                    }
+                });
+        });
     </script>
 @endsection

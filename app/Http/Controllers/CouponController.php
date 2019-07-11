@@ -15,7 +15,7 @@ class CouponController extends Controller
         $coupon = Coupon::where('code',$code)->first();
         if($coupon!=null){
             $currentDate = date("Y-m-d");
-            if($coupon->startdate > $currentDate || $coupon->enddate < $currentDate){
+            if($coupon->startdate > $currentDate || $coupon->enddate < $currentDate || $coupon->status==1){
                 $msg ="not available";
             }else
             {
@@ -93,5 +93,11 @@ class CouponController extends Controller
             Coupon::findOrFail($id)->update($request->all());
             return redirect()->route('ad.coupon.form.get',[$id])->with('success','Updated successfully.');
         }
+    }
+    public function changeStatus(Request $request){
+        $id = $request->id;
+        $coupon = Coupon::findOrFail($id);
+        $coupon->status = 1;
+        $coupon->save();
     }
 }

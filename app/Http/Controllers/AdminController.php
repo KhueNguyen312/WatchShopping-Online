@@ -47,4 +47,49 @@ class AdminController extends Controller
         }
 
     }
+    public function getForm($id){
+        return view("admin.user.manager.add");
+    }
+    public function addUser(Request $request){
+        $messages = [
+            'password.required' => 'Enter password.',
+            'email.required' => 'Enter email.',
+            'image.required' => 'Enter img.',
+            'cpassword.required' => 'Confirm password.',
+        ];
+        $rules = [
+            'password' => 'required',
+            'img' => 'required',
+            'cpassword' => 'required',
+            'email' => 'required',
+        ];
+        $errors = Validator::make($request->all(), $rules, $messages);
+        if ($errors->fails()) {
+            return redirect()
+                ->route('ad.admin.form.get', [0])
+                ->withErrors($errors)
+                ->withInput();
+        }
+        if($request->password == $request->cpassword){
+            if(Admin::find($request->email) == null){
+                return redirect()
+                    ->route('ad.admin.form.get', [0])
+                    ->withErrors(["","This email has already exists"]);
+            }else{
+                Admin::create([
+                    'name' => $request->name,
+                    'img' => $request->img,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role' => 1,
+                ]);
+                return redirect()->route('ad.admin.form.get',[0])->with('success','Created successfully.');
+            }
+        }else{
+            return redirect()
+                ->route('ad.admin.form.get', [0])
+                ->withErrors(["","Make sure you type again password is correct"]);
+        }
+
+    }
 }

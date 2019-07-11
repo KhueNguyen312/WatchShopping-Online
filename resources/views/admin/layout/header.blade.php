@@ -216,7 +216,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="{{Auth::guard('admin')->user()->img}}" class="user-image" alt="User Image">
-                        <span class="hidden-xs">Syaoran Clone</span>
+                        <span class="hidden-xs">{{Auth::guard('admin')->user()->name}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
